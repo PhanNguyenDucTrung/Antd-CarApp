@@ -1,0 +1,105 @@
+/* You can add global styles to this file, and also import other style files */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+}
+
+.example {
+    margin: 12px;
+}
+
+/* Force update ant style */
+.ant-input {
+    padding: 12px 12px 8px 11px;
+}
+
+.ant-input-outlined {
+    border-width: 1px;
+}
+
+.ant-input-outlined:focus {
+    border-width: 2px;
+}
+
+.ant-select .ant-select-selector {
+    padding: 16px 10px 4px 11px;
+}
+
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    padding: 16px 10px 4px 11px;
+    height: 48px;
+}
+
+.ant-select-single .ant-select-selector .ant-select-selection-search {
+    top: 16px;
+}
+
+/* Custom Radio */
+.radio-custom .ant-radio-wrapper {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 50px;
+    position: relative;
+}
+
+.radio-custom .ant-radio-wrapper:hover {
+    border: 2px solid #766bf7;
+    border-radius: 8px;
+    padding: 8px 50px;
+}
+
+.radio-custom .ant-radio-wrapper-checked {
+    border: 2px solid blue;
+    border-radius: 8px;
+    padding: 6px 49px;
+}
+
+.radio-custom .ant-radio {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 12px;
+    /* left: -9999px; */
+    overflow: hidden;
+}
+
+.radio-custom .ant-radio + * {
+    display: block;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Form */
+.form-group {
+    display: flex;
+    gap: 12px;
+}
+
+.form-icon {
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    width: 48px;
+    height: 48px;
+}
+
+.form-icon .circle {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    background-color: #2e7d32;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
