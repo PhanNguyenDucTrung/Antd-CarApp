@@ -7,7 +7,8 @@ import Test from './Pages/Test.jsx';
 // import 'antd/dist/antd.css';
 import './styles.css';
 import MainTemplate from './Templates/MainTemplate.jsx';
-import Refueling from './Pages/AddNew/Refueling.jsx';
+import Refueling from './Pages/Refueling.jsx';
+import NewRefueling from './Pages/AddNew/Refueling.jsx';
 import Service from './Pages/AddNew/Service.jsx';
 import Reminders from './Pages/Reminders.jsx';
 import Reports from './Pages/Reports.jsx';
@@ -28,7 +29,8 @@ const App = () => {
                     <Route path='/reports' element={<Reports />} />
                     <Route path='/users' element={<Users />} />
                     <Route path='/settings' element={<Settings />} />
-                    <Route path='/refueling/create' element={<Refueling />} />
+                    <Route path='/refueling' element={<Refueling />} />
+                    <Route path='/refueling/create' element={<NewRefueling />} />
                     <Route path='/service/create' element={<Service />} />
                     <Route path='/reminder/create' element={<Reminder />} />
                 </Route>

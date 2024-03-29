@@ -56,6 +56,7 @@ const menuItems = [
             },
         ],
     },
+
     {
         label: <NavLink to='/reminder/create'>New Reminder</NavLink>,
         key: 'New Reminder',
@@ -75,33 +76,46 @@ const menuItems = [
         title: 'Menu Item 1',
         icon: <i className='fa-solid fa-gas-pump'></i>,
     },
+
+    {
+        label: <NavLink to='/refueling'>Refueling</NavLink>,
+        key: '3',
+        title: 'Menu Item 1',
+        icon: <i className='fa fa-gas-pump'></i>,
+    },
+    {
+        label: <NavLink to='/service'>Service</NavLink>,
+        key: '4',
+        title: 'Menu Item 1',
+        icon: <i className='fa fa-wrench'></i>,
+    },
     {
         label: <NavLink to='/reminders'>Reminder</NavLink>,
-        key: '3',
+        key: '5',
         title: 'Menu Item 1',
         icon: <i className='fa fa-bell'></i>,
     },
     {
         label: <NavLink to='/reports'>Reports</NavLink>,
-        key: '4',
+        key: '6',
         title: 'Menu Item 1',
         icon: <i className='fa fa-chart-bar'></i>,
     },
     {
         label: <NavLink to='/vehicles'>Vehicles</NavLink>,
-        key: '5',
+        key: '7',
         title: 'Menu Item 2',
         icon: <i className='fa fa-car'></i>,
     },
     {
         label: <NavLink to='/users'>Users</NavLink>,
-        key: '6',
+        key: '8',
         title: 'Menu Item 3',
         icon: <i className='fa fa-user'></i>,
     },
     {
         label: <NavLink to='/settings'>Settings</NavLink>,
-        key: '7',
+        key: '9',
         title: 'Menu Item 1',
         icon: <i className='fa-solid fa-gear'></i>,
     },

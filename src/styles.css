@@ -15,6 +15,9 @@ body {
 }
 
 /* Force update ant style */
+
+/* ANTD SELECT FIELD , DATE PICKER, TIME PICKER */
+
 .ant-input {
     padding: 12px 12px 8px 11px;
 }

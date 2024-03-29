@@ -1,12 +1,12 @@
 [
     {
         "name": "Acura",
-        "slug": "acura",
+        "slug": "Acura",
         "image": "acura.png"
     },
 
     {
-        "name": "arash",
+        "name": "Arash",
         "slug": "arash",
         "image": "arash.png"
     },
@@ -45,21 +45,9 @@
         "image": "dogde.png"
     },
     {
-        "name": "Mercedes",
-        "slug": "mercedes",
-        "image": "mercedes-benz.png"
-    },
-
-    {
-        "name": "Volkswagen",
-        "slug": "volkswagen",
-        "image": "volkswagen.png"
-    },
-
-    {
-        "name": "Toyota",
-        "slug": "toyota",
-        "image": "toyota.png"
+        "name": "Fiat",
+        "slug": "fiat",
+        "image": "fiat.png"
     },
     {
         "name": "Ford",
@@ -67,14 +55,9 @@
         "image": "ford.png"
     },
     {
-        "name": "Chevrolet",
-        "slug": "chevrolet",
-        "image": "chevrolet.png"
-    },
-    {
-        "name": "Nissan",
-        "slug": "nissan",
-        "image": "nissan.png"
+        "name": "GMC",
+        "slug": "gmc",
+        "image": "gmc.png"
     },
     {
         "name": "Honda",
@@ -86,70 +69,60 @@
         "slug": "hyundai",
         "image": "hyundai.png"
     },
+
+    {
+        "name": "Jeep",
+        "slug": "jeep",
+        "image": "jeep.png"
+    },
     {
         "name": "Kia",
         "slug": "kia",
         "image": "kia.png"
     },
+
+    {
+        "name": "Lexus",
+        "slug": "lexus",
+        "image": "lexus.png"
+    },
+
     {
         "name": "Mazda",
         "slug": "mazda",
         "image": "mazda.png"
     },
     {
-        "name": "Subaru",
-        "slug": "subaru",
-        "image": "subaru.png"
+        "name": "Mercedes",
+        "slug": "mercedes",
+        "image": "mercedes-benz.png"
+    },
+    {
+        "name": "MG",
+        "slug": "mg",
+        "image": "mg.png"
     },
     {
         "name": "Mitsubishi",
         "slug": "mitsubishi",
         "image": "mitsubishi.png"
     },
-    {
-        "name": "Lexus",
-        "slug": "lexus",
-        "image": "lexus.png"
-    },
-    {
-        "name": "Acura",
-        "slug": "acura",
-        "image": "acura.png"
-    },
-    {
-        "name": "Infiniti",
-        "slug": "infiniti",
-        "image": "infiniti.png"
-    },
-    {
-        "name": "Suzuki",
-        "slug": "suzuki",
-        "image": "suzuki.png"
-    },
-    {
-        "name": "Volvo",
-        "slug": "volvo",
-        "image": "volvo.png"
-    },
+
     {
         "name": "Porsche",
         "slug": "porsche",
         "image": "porsche.png"
     },
+
     {
-        "name": "Jaguar",
-        "slug": "jaguar",
-        "image": "jaguar.png"
+        "name": "Toyota",
+        "slug": "toyota",
+        "image": "toyota.png"
     },
     {
-        "name": "Land Rover",
-        "slug": "land-rover",
-        "image": "land-rover.png"
-    },
-    {
-        "name": "Jeep",
-        "slug": "jeep",
-        "image": "jeep.png"
+        "name": "Volkswagen",
+        "slug": "volkswagen",
+        "image": "volkswagen.png"
     },
 
     {

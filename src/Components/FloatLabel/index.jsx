@@ -6,10 +6,11 @@ import './index.css';
 
 const FloatLabel = props => {
     const [focus, setFocus] = useState(false);
-    const { children, label, value } = props;
+    const { children, label, value, className } = props;
     console.log('value', value);
 
-    const labelClass = focus || (value && value.length !== 0) ? 'label label-float' : 'label';
+    const labelClass =
+        focus || (value && value.length !== 0) ? `label label-float ${className || ''}` : `label ${className || ''}`;
 
     return (
         <Form.Item className='float-label' onBlur={() => setFocus(false)} onFocus={() => setFocus(true)}>
