@@ -9,6 +9,7 @@ import { TimePicker } from 'antd';
 import FloatLabel from '../../Components/FloatLabel';
 import moment from 'moment';
 import { message } from 'antd';
+import { useParams } from 'react-router-dom';
 
 // import { useForm } from 'antd/lib/form/Form';
 
@@ -24,6 +25,7 @@ const carOptions = cars.map(car => ({
     ),
 }));
 const Refueling = () => {
+    const { id } = useParams();
     const [active, setActive] = useState('active');
     const onChange = e => {
         console.log('radio checked', e.target.value);
@@ -46,6 +48,7 @@ const Refueling = () => {
         console.log('Received values of form:', values);
 
         const data = {
+            id: id,
             date: date,
             time: time,
             comments: comments,

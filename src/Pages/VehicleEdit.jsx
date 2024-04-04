@@ -1,16 +1,12 @@
 import { useState } from 'react';
 import { Form, Layout, Button, Divider } from 'antd';
 import { Radio } from 'antd';
-
-const { Header, Content, Footer } = Layout;
 import { Input, Select } from 'antd';
-const { Option } = Select;
 import FloatLabel from '../Components/FloatLabel';
-
-// import { useForm } from 'antd/lib/form/Form';
-
 import cars from '../assets/cars.json';
-
+import { message } from 'antd';
+const { Option } = Select;
+const { Header, Content, Footer } = Layout;
 const carOptions = cars.map(car => ({
     value: car.slug,
     label: (
@@ -41,6 +37,8 @@ const Vehicles = () => {
     const onFinish = values => {
         console.log('Received values of form:', values);
 
+        message.success('Changes saved successfully!');
+
         const data = {
             manufacturer: manufacturer,
             model: model,
@@ -53,7 +51,6 @@ const Vehicles = () => {
             fuelType: fuelType,
             odometer: odometer,
         };
-        console.log(data);
 
         fetch('http://localhost:3000/vehicles', {
             method: 'POST',
