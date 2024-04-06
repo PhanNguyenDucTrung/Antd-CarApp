@@ -9,31 +9,8 @@ import { Radio } from 'antd';
 import { TimePicker } from 'antd';
 import moment from 'moment';
 import FloatLabel from '../../Components/FloatLabel';
+import { useSelector } from 'react-redux';
 
-const onFinish = values => {
-    console.log('Received values of form:', values);
-
-    const data = {
-        name: name,
-        fuelType: fuelType,
-        odometer: odometer,
-    };
-
-    fetch('http://localhost:3000/vehicles', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-};
 
 const Reminder = () => {
     const onFinish = values => {
@@ -58,7 +35,7 @@ const Reminder = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
-    };
+    }; const serviceData = useSelector((state) => state.serviceReducer.serviceData.SERVICE_DATA);
     const [comments, setComments] = useState('1234');
     const [serviceType, setServiceType] = useState('');
     const [odometer, setOdometer] = useState('1234');
@@ -96,10 +73,9 @@ const Reminder = () => {
                         </div>
                         <FloatLabel label='Type of Service' name='serviceType' value={serviceType}>
                             <Select showSearch onChange={value => setServiceType(value)} value={serviceType}>
-                                <Option value='service1'>Service 1</Option>
-                                <Option value='service2'>Service 2</Option>
-                                <Option value='service3'>Service 3</Option>
-                                <Option value='service4'>Service 4</Option>
+                                {serviceData.map(service => (
+                                    <Option key={service.SERVICE_ID} value={service.SERVICE_TYPE}>{service.SERVICE_TYPE}</Option>
+                                ))}
                             </Select>
                         </FloatLabel>
                     </div>

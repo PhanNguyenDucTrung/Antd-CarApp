@@ -5,6 +5,9 @@ import { Input, Select } from 'antd';
 import FloatLabel from '../Components/FloatLabel';
 import cars from '../assets/cars.json';
 import { message } from 'antd';
+import { useEffect } from 'react';
+import axios from 'axios'
+const { TextArea } = Input;
 const { Option } = Select;
 const { Header, Content, Footer } = Layout;
 const carOptions = cars.map(car => ({
@@ -16,30 +19,37 @@ const carOptions = cars.map(car => ({
         </div>
     ),
 }));
-const Vehicles = () => {
-    const [active, setActive] = useState('active');
+const VehicleEdit = () => {
+    const [id, setId] = useState(null);
+
+
     const onChange = e => {
         console.log('radio checked', e.target.value);
         setActive(e.target.value);
-    };
+    }; const [fuelData, setFuelData] = useState([]);
+    const [active, setActive] = useState('active');
+    const [comments, setComments] = useState('');
     const [manufacturer, setManufacturer] = useState([]);
-    const [model, setModel] = useState('Model 1');
+    const [model, setModel] = useState('');
     const [year, setYear] = useState('2021');
-    const [license, setLicense] = useState('1234');
-    const [chassis, setChassis] = useState('1234');
-    const [identification, setIdentification] = useState('1234');
-    const [name, setName] = useState('Nikhil');
-    const [fuelCapacity, setFuelCapacity] = useState('1234');
-    const [fuelType, setFuelType] = useState('1234');
-    const [odometer, setOdemeter] = useState('1234');
+    const [license, setLicense] = useState('');
+    const [chassis, setChassis] = useState('');
+    const [identification, setIdentification] = useState('');
+    const [name, setName] = useState('');
+    const [fuelCapacity, setFuelCapacity] = useState('');
+    const [fuelType, setFuelType] = useState('');
+    const [odometer, setOdemeter] = useState('');
 
     // gửi dữ liệu lên server
     const onFinish = values => {
         console.log('Received values of form:', values);
 
+
         message.success('Changes saved successfully!');
 
         const data = {
+            id,
+            active,
             manufacturer: manufacturer,
             model: model,
             year: year,
@@ -50,9 +60,10 @@ const Vehicles = () => {
             fuelCapacity: fuelCapacity,
             fuelType: fuelType,
             odometer: odometer,
+            notes: comments,
         };
 
-        fetch('http://localhost:3000/vehicles', {
+        fetch(`http://localhost:3000/carTracking/vehicle/api/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,7 +78,19 @@ const Vehicles = () => {
                 console.error('Error:', error);
             });
     };
-
+    useEffect(() => {
+        axios.get('http://localhost:3000/carTracking/fuelType/api')
+            .then(response => {
+                // Work with the fetched data here
+                console.log(response.data);
+                setFuelData(response.data.FUEL_DATA);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        const storedId = localStorage.getItem('id');
+        setId(storedId);
+    }, []);
     return (
         <Layout style={{ backgroundColor: '#fff' }}>
             <Header>Header</Header>
@@ -131,10 +154,9 @@ const Vehicles = () => {
                         </div>
                         <FloatLabel label='Fuel type' name='fuelType' value={fuelType}>
                             <Select showSearch onChange={value => setFuelType(value)} value={fuelType}>
-                                <Option value='jack'>Compressed natural gas</Option>
-                                <Option value='lucy'>Electrical</Option>
-                                <Option value='tom'>Liquefied petroleum gas</Option>
-                                <Option value='jerry'>Liquids</Option>
+                                {fuelData.map(fuel => (
+                                    <Option key={fuel.FUEL_ID} value={fuel.FUEL_NAME}>{fuel.FUEL_NAME}</Option>
+                                ))}
                             </Select>
                         </FloatLabel>
                     </div>
@@ -144,8 +166,8 @@ const Vehicles = () => {
                         <FloatLabel
                             label='Fuel capacity(L)'
                             name='fuelCapacity'
-                            value={identification}
-                            style={{ display: 'flex' }}>
+                            value={fuelCapacity}
+                        >
                             <Input value={fuelCapacity} onChange={e => setFuelCapacity(e.target.value)} />
                         </FloatLabel>
                     </div>
@@ -190,6 +212,15 @@ const Vehicles = () => {
                     </div>
 
                     <div className='form-group'>
+                        <div className='form-icon'>
+                            <i className='fa-solid fa-comment'></i> {/* Replace with the icon you want to use */}
+                        </div>
+                        <FloatLabel label='Comments' name='comments' value={comments}>
+                            <TextArea rows={4} onChange={e => setComments(e.target.value)} value={comments} />
+                        </FloatLabel>
+                    </div>
+
+                    <div className='form-group'>
                         <div className='form-icon'></div>
                         <Form.Item>
                             <Button type='primary' htmlType='submit'>
@@ -203,4 +234,4 @@ const Vehicles = () => {
         </Layout>
     );
 };
-export default Vehicles;
+export default VehicleEdit;

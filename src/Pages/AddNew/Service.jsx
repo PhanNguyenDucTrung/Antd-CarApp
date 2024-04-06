@@ -1,25 +1,19 @@
-import { useState } from 'react';
+import { useState} from 'react';
 import { Form, Layout, Button, Divider } from 'antd';
-import { Radio } from 'antd';
+// import { Radio } from 'antd';
 import { DatePicker } from 'antd';
 import { TimePicker } from 'antd';
 import { Input, Select } from 'antd';
 import FloatLabel from '../../Components/FloatLabel';
+// http://localhost:3000/carTracking/service/api/
+import {  useSelector } from 'react-redux';
 
-// import { useForm } from 'antd/lib/form/Form';
+
 const { Header, Content, Footer } = Layout;
-import cars from '../../assets/cars.json';
+
 const { TextArea } = Input;
 const { Option } = Select;
-const carOptions = cars.map(car => ({
-    value: car.slug,
-    label: (
-        <div>
-            <img src={`../../carlogo/${car.image}`} alt={car.name} style={{ width: '30px', marginRight: '10px' }} />
-            {car.name}
-        </div>
-    ),
-}));
+
 const Service = () => {
     const [time, setTime] = useState(null);
     const [date, setDate] = useState(null);
@@ -30,17 +24,35 @@ const Service = () => {
     const [odometer, setOdometer] = useState('1234');
     const [comments, setComments] = useState('1234');
 
+    const fuelData = useSelector((state) => state.serviceReducer.serviceData.FUEL_DATA);
+    const serviceData = useSelector((state) => state.serviceReducer.serviceData.SERVICE_DATA);
+    const placeData = useSelector((state) => state.serviceReducer.serviceData.PLACE_DATA);
+    const vehicleId = useSelector(state => state.serviceReducer.selectedRow.vehicle_id);
+    console.log(vehicleId);
+    console.log(fuelData);
+    console.log(placeData);
+
+
+
+
+
     // gửi dữ liệu lên server
     const onFinish = values => {
         console.log('Received values of form:', values);
 
         const data = {
-            name: name,
+            name: name, // Assuming 'name' is defined somewhere else
             fuelType: fuelType,
             odometer: odometer,
+            time: time, // Filling the rest based on your requirements
+            date: date,
+            place: place,
+            serviceType: serviceType,
+            cost: money,
+            comments: comments
         };
-
-        fetch('http://localhost:3000/vehicles', {
+// http://localhost:3000/carTracking/service/api/:vehicle_id
+        fetch(`http://localhost:3000/carTracking/service/api/${vehicleId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +118,11 @@ const Service = () => {
                             <i className='fa-solid fa-map-marker-alt'></i>
                         </div>
                         <FloatLabel label='Place' name='place' value={place}>
-                            <Input onChange={e => setPlace(e.target.value)} value={place} />
+                            <Select showSearch onChange={value => setPlace(value)} value={place}>
+                                {placeData.map(place => (
+                                    <Option key={place.PLACE_ID} value={place.PLACE_NAME}>{place.PLACE_NAME}</Option>
+                                ))}
+                            </Select>
                         </FloatLabel>
                     </div>
 
@@ -117,10 +133,9 @@ const Service = () => {
                         </div>
                         <FloatLabel label='Type of Service' name='serviceType' value={serviceType}>
                             <Select showSearch onChange={value => setServiceType(value)} value={serviceType}>
-                                <Option value='service1'>Service 1</Option>
-                                <Option value='service2'>Service 2</Option>
-                                <Option value='service3'>Service 3</Option>
-                                <Option value='service4'>Service 4</Option>
+                                {serviceData.map(service => (
+                                    <Option key={service.SERVICE_ID} value={service.SERVICE_TYPE}>{service.SERVICE_TYPE}</Option>
+                                ))}
                             </Select>
                         </FloatLabel>
                     </div>
@@ -132,10 +147,9 @@ const Service = () => {
                         </div>
                         <FloatLabel label='Fuel type' name='fuelType' value={fuelType}>
                             <Select showSearch onChange={value => setFuelType(value)} value={fuelType}>
-                                <Option value='jack'>Compressed natural gas</Option>
-                                <Option value='lucy'>Electrical</Option>
-                                <Option value='tom'>Liquefied petroleum gas</Option>
-                                <Option value='jerry'>Liquids</Option>
+                                {fuelData.map(place => (
+                                    <Option key={place.FUEL_ID} value={place.FUEL_NAME}>{place.FUEL_NAME}</Option>
+                                ))}
                             </Select>
                         </FloatLabel>
                     </div>

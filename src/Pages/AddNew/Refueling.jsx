@@ -10,6 +10,7 @@ import FloatLabel from '../../Components/FloatLabel';
 import moment from 'moment';
 import { message } from 'antd';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 // import { useForm } from 'antd/lib/form/Form';
 
@@ -38,10 +39,11 @@ const Refueling = () => {
     const [date, setDate] = useState(null);
 
     const [fuelCapacity, setFuelCapacity] = useState('1234');
-    const [fuelType, setFuelType] = useState('');
+
     const [fuelPrice, setFuelPrice] = useState('');
     const [odometer, setOdometer] = useState('');
     const [comments, setComments] = useState('');
+    const fuelData = useSelector((state) => state.serviceReducer.serviceData.FUEL_DATA);
 
     // gửi dữ liệu lên server
     const onFinish = values => {
@@ -137,17 +139,16 @@ const Refueling = () => {
                                     <div className='form-icon'>
                                         <i className='fa-solid fa-gas-pump'></i>
                                     </div>
-                                    <FloatLabel label='Fuel type' name='fuelType' value={fuelType}>
+                                    <FloatLabel label='Fuel type' name='fuelType' value={field.fuelType}>
                                         <Select
                                             showSearch
                                             onChange={value =>
                                                 handleInputChange({ target: { value } }, index, 'fuelType')
                                             }
                                             value={field.fuelType}>
-                                            <Option value='jack'>Compressed natural gas</Option>
-                                            <Option value='lucy'>Electrical</Option>
-                                            <Option value='tom'>Liquefied petroleum gas</Option>
-                                            <Option value='jerry'>Liquids</Option>
+                                            {fuelData?.map(place => (
+                                                <Option key={place.FUEL_ID} value={place.FUEL_NAME}>{place.FUEL_NAME}</Option>
+                                            ))}
                                         </Select>
                                     </FloatLabel>
                                 </div>
@@ -157,7 +158,7 @@ const Refueling = () => {
                                         <i className='fa-solid fa-dollar-sign'></i>{' '}
                                         {/* Replace with the icon you want to use */}
                                     </div>
-                                    <FloatLabel label='Fuel Price' name='fuelPrice' value={fuelPrice}>
+                                    <FloatLabel label='Fuel Price' name='fuelPrice' value={field.fuelPrice}>
                                         <Input
                                             type='number'
                                             onChange={e => handleInputChange(e, index, 'fuelPrice')}
@@ -168,7 +169,7 @@ const Refueling = () => {
 
                                 <div className='form-group'>
                                     <div className='form-icon'></div>
-                                    <FloatLabel label='Fuel Capacity' name='fuelCapacity' value={fuelCapacity}>
+                                    <FloatLabel label='Fuel Capacity' name='fuelCapacity' value={field.fuelCapacity}>
                                         <Input
                                             type='number'
                                             onChange={e => handleInputChange(e, index, 'fuelCapacity')}

@@ -7,7 +7,7 @@ import './index.css';
 const FloatLabel = props => {
     const [focus, setFocus] = useState(false);
     const { children, label, value, className } = props;
-    console.log('value', value);
+
 
     const labelClass =
         focus || (value && value.length !== 0) ? `label label-float ${className || ''}` : `label ${className || ''}`;

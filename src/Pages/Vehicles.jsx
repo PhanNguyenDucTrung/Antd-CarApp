@@ -1,7 +1,12 @@
 // import React from 'react';
-import { Table } from 'antd';
+import { Table, Spin, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCarServiceData, setSelectedRow } from '../redux/reducers/serviceReducer';
+
 const buttonStyle = {
     color: 'white',
     backgroundColor: 'red',
@@ -15,14 +20,35 @@ const buttonStyle = {
     marginLeft: '10px',
 };
 const Vehicles = () => {
+    const dispatch = useDispatch();
+    const { id } = useParams();
+    localStorage.setItem('id', id)
     const navigate = useNavigate();
+
+
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/carTracking/service/api/');
+                const data = await response.json();
+                dispatch(setCarServiceData(data));
+            } catch (error) {
+                console.error('Error fetching service data:', error);
+            }
+        };
+
+        fetchData(); // Call the fetchData function when the component mounts
+    }, [dispatch]);
+
     const columns = [
-        { width: 120, title: 'Số thứ tự', dataIndex: 'index', key: 'index', sorter: (a, b) => a.index - b.index },
+        { width: 120, title: 'Số thứ tự', dataIndex: 'vehicle_id', key: 'vehicle_id', sorter: (a, b) => a.index - b.index },
         {
             title: 'Nickname',
-            dataIndex: 'nickname',
-            key: 'nickname',
-            sorter: (a, b) => a.nickname.localeCompare(b.nickname),
+            dataIndex: 'name',
+            key: 'name',
+            sorter: (a, b) => a.name.localeCompare(b.name),
         },
         {
             title: 'Nhà sản xuất',
@@ -38,9 +64,9 @@ const Vehicles = () => {
         },
         {
             title: 'Last Update',
-            dataIndex: 'lastUpdate',
-            key: 'lastUpdate',
-            sorter: (a, b) => new Date(a.lastUpdate) - new Date(b.lastUpdate),
+            dataIndex: 'last_updated', // changed from 'lastUpdate' to 'last_updated'
+            key: 'last_updated', // changed from 'lastUpdate' to 'last_updated'
+            sorter: (a, b) => new Date(a.last_updated) - new Date(b.last_updated), // changed from 'lastUpdate' to 'last_updated'
         },
         {
             title: 'Status',
@@ -58,7 +84,7 @@ const Vehicles = () => {
                         style={buttonStyle}
                         onClick={() => {
                             handleEdit(record);
-                            navigate('/vehicle/edit');
+                            navigate(`/vehicle/edit/${record.vehicle_id}`);
                         }}>
                         <EditOutlined />
                     </button>
@@ -70,78 +96,75 @@ const Vehicles = () => {
         },
     ];
 
-    const data = [
-        // Add your data here. Each object in the array represents a row in the table.
-        // For example:
-        {
-            key: '1',
-            index: 1,
-            nickname: 'Vehicle 1',
-            manufacturer: 'Manufacturer 1',
-            model: 'Model 1',
-            lastUpdate: '2022-01-01',
-            status: 'Active',
-        },
 
-        {
-            key: '2',
-            index: 2,
-            nickname: 'Vehicle 2',
-            manufacturer: 'Manufacturer 2',
-            model: 'Model 2',
-            lastUpdate: '2022-01-02',
-            status: 'Inactive',
-        },
 
-        {
-            key: '3',
-            index: 3,
-            nickname: 'Vehicle 3',
-            manufacturer: 'Manufacturer 3',
-            model: 'Model 3',
-            lastUpdate: '2022-01-03',
-            status: 'Active',
-        },
 
-        {
-            key: '4',
-            index: 4,
-            nickname: 'Vehicle 4',
-            manufacturer: 'Manufacturer 4',
-            model: 'Model 4',
-            lastUpdate: '2022-01-04',
-            status: 'Inactive',
-        },
-
-        {
-            key: '5',
-            index: 5,
-            nickname: 'Vehicle 5',
-            manufacturer: 'Manufacturer 5',
-            model: 'Model 5',
-            lastUpdate: '2022-01-05',
-            status: 'Active',
-        },
-    ];
-
-    const handleEdit = record => {
-        console.log('Edit', record);
-        // Add your edit logic here
+    const handleRowSelection = (selectedRowKeys, selectedRows) => {
+        if (selectedRows.length > 0) {
+            dispatch(setSelectedRow(selectedRows[0]));
+        } else {
+            dispatch(setSelectedRow(null));
+        }
     };
+
+    const selectedRow = useSelector(state => state.serviceReducer.selectedRow);
+    console.log(selectedRow);
+
+    const [data, setData] = useState(null);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/carTracking/vehicle/api/${id}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const jsonData = await response.json(); console.log(jsonData);
+
+                setData(jsonData.VEHICLE_DATA);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+
+        // Cleanup function
+        return () => {
+            // Perform any cleanup here if necessary
+        };
+    }, []);
 
     const handleDelete = record => {
         console.log('Delete', record);
         // Add your delete logic here
     };
+
+    const handleEdit = record => {
+        console.log('Edit', record);
+        // Add your edit logic here
+    };
+    if (!data) {
+        return <Spin />;
+    }
+
     return (
-        <Table
-            columns={columns}
-            dataSource={data}
-            style={{
-                minHeight: '100vh',
-                width: '100%',
-            }}
-        />
+        <> <Button type="primary" onClick={() => navigate('/vehicle/new')}>
+            Add New
+        </Button> <Table
+                rowSelection={{
+                    type: 'radio',
+                    selectedRowKeys: selectedRow ? [selectedRow.key] : [],
+                    onChange: handleRowSelection,
+                }}
+                columns={columns}
+                dataSource={data}
+                style={{
+                    minHeight: '100vh',
+                    width: '100%',
+                }}
+            /></>
+
     );
 };
 

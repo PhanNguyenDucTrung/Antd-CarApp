@@ -22,9 +22,14 @@ const App = () => {
         <BrowserRouter>
             <Routes path='' element={<MainTemplate />}>
                 <Route path='/' element={<MainTemplate />}>
+                    <Route path='/user/:id' element={<Vehicles />} />
                     <Route path='/history' element={<History />} />
                     <Route path='/vehicles' element={<Vehicles />} />
-                    <Route path='/vehicle/edit' element={<VehicleEdit />} />
+                    <Route path="/vehicle/edit/:id" element={<VehicleEdit />}>
+
+                    </Route>
+                    <Route path='/vehicle/new' element={<VehicleEdit />} />
+
                     <Route path='/reminders' element={<Reminders />} />
                     <Route path='/reports' element={<Reports />} />
                     <Route path='/users' element={<Users />} />
