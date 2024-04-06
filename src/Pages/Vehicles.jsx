@@ -22,11 +22,8 @@ const buttonStyle = {
 const Vehicles = () => {
     const dispatch = useDispatch();
     const { id } = useParams();
-    localStorage.setItem('id', id)
+    localStorage.setItem('id', id);
     const navigate = useNavigate();
-
-
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,7 +40,13 @@ const Vehicles = () => {
     }, [dispatch]);
 
     const columns = [
-        { width: 120, title: 'Số thứ tự', dataIndex: 'vehicle_id', key: 'vehicle_id', sorter: (a, b) => a.index - b.index },
+        {
+            width: 120,
+            title: 'Số thứ tự',
+            dataIndex: 'vehicle_id',
+            key: 'vehicle_id',
+            sorter: (a, b) => a.index - b.index,
+        },
         {
             title: 'Nickname',
             dataIndex: 'name',
@@ -96,15 +99,15 @@ const Vehicles = () => {
         },
     ];
 
+    const handleRowSelection = selectedRowKeys => {
+        // Get the first selected row key
+        const selectedKey = selectedRowKeys[0];
 
+        // Find the corresponding row data
+        const selectedRow = data.find(row => row.vehicle_id === selectedKey);
 
-
-    const handleRowSelection = (selectedRowKeys, selectedRows) => {
-        if (selectedRows.length > 0) {
-            dispatch(setSelectedRow(selectedRows[0]));
-        } else {
-            dispatch(setSelectedRow(null));
-        }
+        // Dispatch the setSelectedRow action with the selected row data
+        dispatch(setSelectedRow(selectedRow));
     };
 
     const selectedRow = useSelector(state => state.serviceReducer.selectedRow);
@@ -118,10 +121,10 @@ const Vehicles = () => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const jsonData = await response.json(); console.log(jsonData);
+                const jsonData = await response.json();
+                console.log(jsonData);
 
                 setData(jsonData.VEHICLE_DATA);
-
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -149,12 +152,13 @@ const Vehicles = () => {
     }
 
     return (
-        <> <Button type="primary" onClick={() => navigate('/vehicle/new')}>
-            Add New
-        </Button> <Table
+        <>
+            <Button type='primary' onClick={() => navigate('/vehicle/new')}>
+                Add New
+            </Button>
+            <Table
                 rowSelection={{
                     type: 'radio',
-                    selectedRowKeys: selectedRow ? [selectedRow.key] : [],
                     onChange: handleRowSelection,
                 }}
                 columns={columns}
@@ -163,8 +167,20 @@ const Vehicles = () => {
                     minHeight: '100vh',
                     width: '100%',
                 }}
-            /></>
-
+            />
+            <Table
+                rowSelection={{
+                    type: 'radio',
+                    onChange: handleRowSelection,
+                }}
+                columns={columns}
+                dataSource={data}
+                style={{
+                    minHeight: '100vh',
+                    width: '100%',
+                }}
+            />
+        </>
     );
 };
 
