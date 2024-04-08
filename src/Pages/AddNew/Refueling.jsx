@@ -1,48 +1,30 @@
 import { useState } from 'react';
 import { Form, Layout, Button, Divider } from 'antd';
 import { DatePicker } from 'antd';
-const { Header, Content, Footer } = Layout;
 import { Input, Select } from 'antd';
-const { TextArea } = Input;
-const { Option } = Select;
 import { TimePicker } from 'antd';
 import FloatLabel from '../../Components/FloatLabel';
 import moment from 'moment';
 import { message } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+const { TextArea } = Input;
+const { Option } = Select;
+const { Header, Content, Footer } = Layout;
 
-// import { useForm } from 'antd/lib/form/Form';
 
-import cars from '../../assets/cars.json';
-
-const carOptions = cars.map(car => ({
-    value: car.slug,
-    label: (
-        <div>
-            <img src={`../../carlogo/${car.image}`} alt={car.name} style={{ width: '30px', marginRight: '10px' }} />
-            {car.name}
-        </div>
-    ),
-}));
 const Refueling = () => {
-    const { id } = useParams();
     const [active, setActive] = useState('active');
     const onChange = e => {
-        console.log('radio checked', e.target.value);
         setActive(e.target.value);
     };
 
     const [time, setTime] = useState(moment('12:00', 'HH:mm'));
     const [fields, setFields] = useState([{ fuelCapacity: '', fuelType: '', fuelPrice: '' }]);
-
     const [date, setDate] = useState(null);
-
-    const [fuelCapacity, setFuelCapacity] = useState('1234');
-
-    const [fuelPrice, setFuelPrice] = useState('');
     const [odometer, setOdometer] = useState('');
     const [comments, setComments] = useState('');
+    const vehicleId = useSelector(state => state.serviceReducer.selectedRows[0].vehicle_id);
     const fuelData = useSelector((state) => state.serviceReducer.serviceData.FUEL_DATA);
 
     // gửi dữ liệu lên server
@@ -50,18 +32,15 @@ const Refueling = () => {
         console.log('Received values of form:', values);
 
         const data = {
-            id: id,
+            fields: fields,
             date: date,
             time: time,
             comments: comments,
-            fuelPrice: fuelPrice,
-            fuelCapacity: fuelCapacity,
-            fuelType: fuelType,
             odometer: odometer,
         };
         console.log(data);
 
-        fetch('http://localhost:3000/vehicles', {
+        fetch(`http://localhost:3000/carTracking/refuelling/api/${vehicleId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     serviceData: {},
-    selectedRow: null,  // New field for selected row
+    selectedRows: null, 
 };
 
 const serviceSlice = createSlice({
@@ -12,13 +12,13 @@ const serviceSlice = createSlice({
         setCarServiceData(state, action) {
             state.serviceData = action.payload;
         },
-        setSelectedRow(state, action) {  // New reducer for selected row
-            state.selectedRow = action.payload;
+        setSelectedRows(state, action) {  // New reducer for selected row
+            state.selectedRows= action.payload;
         },
     },
 });
 
-export const { setCarServiceData, setSelectedRow } = serviceSlice.actions;  // Export new action
+export const { setCarServiceData, setSelectedRows } = serviceSlice.actions;  // Export new action
 
 export default serviceSlice.reducer;
 

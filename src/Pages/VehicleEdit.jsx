@@ -141,7 +141,7 @@ const VehicleEdit = () => {
 
                     <div className='form-group'>
                         <div className='form-icon'></div>
-                        <FloatLabel label='Name (Optional)' name='name' value={name}>
+                        <FloatLabel label='Name' name='name' value={name}>
                             <Input value={name} onChange={e => setName(e.target.value)} />
                         </FloatLabel>
                     </div>

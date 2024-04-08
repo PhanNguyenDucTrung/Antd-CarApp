@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import { Form, Layout, Button, Divider } from 'antd';
 // import { Radio } from 'antd';
 import { DatePicker } from 'antd';
@@ -6,7 +6,7 @@ import { TimePicker } from 'antd';
 import { Input, Select } from 'antd';
 import FloatLabel from '../../Components/FloatLabel';
 // http://localhost:3000/carTracking/service/api/
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 
 const { Header, Content, Footer } = Layout;
@@ -27,7 +27,7 @@ const Service = () => {
     const fuelData = useSelector((state) => state.serviceReducer.serviceData.FUEL_DATA);
     const serviceData = useSelector((state) => state.serviceReducer.serviceData.SERVICE_DATA);
     const placeData = useSelector((state) => state.serviceReducer.serviceData.PLACE_DATA);
-    const vehicleId = useSelector(state => state.serviceReducer.selectedRow.vehicle_id);
+    const vehicleId = useSelector(state => state.serviceReducer.selectedRows[0].vehicle_id);
     console.log(vehicleId);
     console.log(fuelData);
     console.log(placeData);
@@ -51,7 +51,7 @@ const Service = () => {
             cost: money,
             comments: comments
         };
-// http://localhost:3000/carTracking/service/api/:vehicle_id
+      
         fetch(`http://localhost:3000/carTracking/service/api/${vehicleId}`, {
             method: 'POST',
             headers: {

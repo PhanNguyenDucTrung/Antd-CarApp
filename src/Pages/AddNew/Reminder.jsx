@@ -42,6 +42,9 @@ const Reminder = () => {
     const [time, setTime] = useState(moment('12:00', 'HH:mm'));
     const [contactMethod, setContactMethod] = useState('');
     const [date, setDate] = useState(null);
+
+
+    // http://localhost:3000/carTracking/service/api/:vehicle_id
     return (
         <Layout style={{ backgroundColor: '#fff' }}>
             <Header>Header</Header>

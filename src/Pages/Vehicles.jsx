@@ -1,11 +1,10 @@
-// import React from 'react';
 import { Table, Spin, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCarServiceData, setSelectedRow } from '../redux/reducers/serviceReducer';
+import { setCarServiceData, setSelectedRows } from '../redux/reducers/serviceReducer';
 
 const buttonStyle = {
     color: 'white',
@@ -24,7 +23,11 @@ const Vehicles = () => {
     const { id } = useParams();
     localStorage.setItem('id', id);
     const navigate = useNavigate();
-
+    const rowSelection = {
+        onChange: (selectedRowKeys, selectedRows) => {
+            dispatch(setSelectedRows(selectedRows))
+        },
+    };
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -99,21 +102,9 @@ const Vehicles = () => {
         },
     ];
 
-    const handleRowSelection = selectedRowKeys => {
-        // Get the first selected row key
-        const selectedKey = selectedRowKeys[0];
-
-        // Find the corresponding row data
-        const selectedRow = data.find(row => row.vehicle_id === selectedKey);
-
-        // Dispatch the setSelectedRow action with the selected row data
-        dispatch(setSelectedRow(selectedRow));
-    };
-
-    const selectedRow = useSelector(state => state.serviceReducer.selectedRow);
-    console.log(selectedRow);
 
     const [data, setData] = useState(null);
+ 
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -123,8 +114,8 @@ const Vehicles = () => {
                 }
                 const jsonData = await response.json();
                 console.log(jsonData);
-
-                setData(jsonData.VEHICLE_DATA);
+                const dataWithKey = jsonData.VEHICLE_DATA.map(item => ({ key: item.vehicle_id, ...item }));
+                setData(dataWithKey);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -159,7 +150,7 @@ const Vehicles = () => {
             <Table
                 rowSelection={{
                     type: 'radio',
-                    onChange: handleRowSelection,
+                    ...rowSelection,
                 }}
                 columns={columns}
                 dataSource={data}
@@ -168,18 +159,7 @@ const Vehicles = () => {
                     width: '100%',
                 }}
             />
-            <Table
-                rowSelection={{
-                    type: 'radio',
-                    onChange: handleRowSelection,
-                }}
-                columns={columns}
-                dataSource={data}
-                style={{
-                    minHeight: '100vh',
-                    width: '100%',
-                }}
-            />
+
         </>
     );
 };
