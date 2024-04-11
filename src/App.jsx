@@ -4,7 +4,6 @@ import VehicleEdit from './Pages/VehicleEdit.jsx';
 import History from './Pages/History.jsx';
 import Test from './Pages/Test.jsx';
 
-// import 'antd/dist/antd.css';
 import './styles.css';
 import MainTemplate from './Templates/MainTemplate.jsx';
 import Refueling from './Pages/Refueling.jsx';
@@ -16,6 +15,7 @@ import Users from './Pages/Users.jsx';
 import Settings from './Pages/Settings.jsx';
 import Reminder from './Pages/AddNew/Reminder.jsx';
 import Vehicles from './Pages/Vehicles.jsx';
+import FirstVehicleModal from './Pages/FirstVehicleModal.jsx'
 
 const App = () => {
     return (
@@ -25,9 +25,8 @@ const App = () => {
                     <Route path='/user/:id' element={<Vehicles />} />
                     <Route path='/history' element={<History />} />
                     <Route path='/vehicles' element={<Vehicles />} />
-                    <Route path="/vehicle/edit/:id" element={<VehicleEdit />}>
 
-                    </Route>
+                    <Route path="/vehicle/edit/:id" element={<VehicleEdit />} />
                     <Route path='/vehicle/new' element={<VehicleEdit />} />
 
                     <Route path='/reminders' element={<Reminders />} />
@@ -39,6 +38,8 @@ const App = () => {
                     <Route path='/service/create' element={<Service />} />
                     <Route path='/reminder/create' element={<Reminder />} />
                 </Route>
+
+                <Route path='/first-vehicle' element={<FirstVehicleModal />} />
 
                 <Route path='*' element={<Test />} />
             </Routes>

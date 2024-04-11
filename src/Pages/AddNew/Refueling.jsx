@@ -24,8 +24,11 @@ const Refueling = () => {
     const [date, setDate] = useState(null);
     const [odometer, setOdometer] = useState('');
     const [comments, setComments] = useState('');
+    const [gasStation, setGasStation] = useState('')
     const vehicleId = useSelector(state => state.serviceReducer.selectedRows[0].vehicle_id);
     const fuelData = useSelector((state) => state.serviceReducer.serviceData.FUEL_DATA);
+    const gasStationData = useSelector((state) => state.serviceReducer.serviceData.GAS_STATION_DATA);
+    console.log('gasastation', gasStationData);
 
     // gửi dữ liệu lên server
     const onFinish = values => {
@@ -33,6 +36,7 @@ const Refueling = () => {
 
         const data = {
             fields: fields,
+            gasStation: gasStation,
             date: date,
             time: time,
             comments: comments,
@@ -109,6 +113,19 @@ const Refueling = () => {
                         </FloatLabel>
                     </div>
 
+                    <Divider />
+                    <div className='form-group'>
+                        <div className='form-icon'>
+                            <i class="fa-solid fa-gas-pump"></i>
+                        </div>
+                        <FloatLabel label='Gas Station' name='gasStation' value={gasStation}>
+                            <Select showSearch onChange={value => setGasStation(value)} value={gasStation}>
+                                {gasStationData.map(gasStation => (
+                                    <Option key={gasStation.GAS_STATION_ID} value={gasStation.GAS_STATION_NAME}>{gasStation.GAS_STATION_NAME}</Option>
+                                ))}
+                            </Select>
+                        </FloatLabel>
+                    </div>
                     <Divider />
 
                     {fields.map((field, index) => {

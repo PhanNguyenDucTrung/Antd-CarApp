@@ -4,7 +4,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCarServiceData, setSelectedRows } from '../redux/reducers/serviceReducer';
+import { setCarServiceData, setSelectedRows, setUserId } from '../redux/reducers/serviceReducer';
 
 const buttonStyle = {
     color: 'white',
@@ -19,13 +19,22 @@ const buttonStyle = {
     marginLeft: '10px',
 };
 const Vehicles = () => {
-    const dispatch = useDispatch();
     const { id } = useParams();
-    localStorage.setItem('id', id);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const newVehicle = useSelector((state) => state.serviceReducer.addNewVehicle);
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    console.log('New vechicle', newVehicle);
+    if (id) {
+        localStorage.setItem('id', id);
+    }
+
     const rowSelection = {
+        selectedRowKeys,
+
         onChange: (selectedRowKeys, selectedRows) => {
-            dispatch(setSelectedRows(selectedRows))
+            setSelectedRowKeys(selectedRowKeys);
+            dispatch(setSelectedRows(selectedRows));
         },
     };
     useEffect(() => {
@@ -104,11 +113,13 @@ const Vehicles = () => {
 
 
     const [data, setData] = useState(null);
- 
+
     useEffect(() => {
         const fetchData = async () => {
             try {
+
                 const response = await fetch(`http://localhost:3000/carTracking/vehicle/api/${id}`);
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -116,6 +127,12 @@ const Vehicles = () => {
                 console.log(jsonData);
                 const dataWithKey = jsonData.VEHICLE_DATA.map(item => ({ key: item.vehicle_id, ...item }));
                 setData(dataWithKey);
+
+                if (dataWithKey.length > 0) {
+                    console.log('Setting selected rows:', [dataWithKey[0]]);
+                    dispatch(setSelectedRows([dataWithKey[0]]));
+                    setSelectedRowKeys([dataWithKey[0].key]);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -140,6 +157,11 @@ const Vehicles = () => {
     };
     if (!data) {
         return <Spin />;
+    }
+
+    if (data.length === 0 && newVehicle === false) {
+        dispatch(setUserId(id))
+        navigate('/first-vehicle');
     }
 
     return (
