@@ -27,35 +27,7 @@ const menuItems = [
         title: 'Menu Item 1',
         icon: <i className='fa fa-history'></i>,
     },
-    {
-        label: <NavLink to='#'>Add New</NavLink>,
-        key: '2',
-        title: 'Menu Item 1',
-        icon: <i className='fa fa-plus'></i>,
-        // click add new to see the dropdown menuItems containing the following links refueling, service, reminders
 
-        submenus: [
-            {
-                label: <NavLink to='/refueling/create'>New Refueling</NavLink>,
-                key: 'New Refueling',
-                title: 'Menu Item 1',
-                icon: <i className='fa-solid fa-gas-pump'></i>,
-            },
-            {
-                label: <NavLink to='/service/create'>New Service</NavLink>,
-                key: 'New Service',
-                title: 'Menu Item 1',
-
-                icon: <i className='fa-solid fa-wrench'></i>,
-            },
-            {
-                label: <NavLink to='/reminder/create'>New Reminder</NavLink>,
-                key: 'New Reminder',
-                title: 'Menu Item 1',
-                icon: <i className='fa fa-plus'></i>,
-            },
-        ],
-    },
 
     {
         label: <NavLink to='/reminder/create'>New Reminder</NavLink>,
@@ -77,24 +49,9 @@ const menuItems = [
         icon: <i className='fa-solid fa-gas-pump'></i>,
     },
 
-    {
-        label: <NavLink to='/refueling'>Refueling</NavLink>,
-        key: '3',
-        title: 'Menu Item 1',
-        icon: <i className='fa fa-gas-pump'></i>,
-    },
-    {
-        label: <NavLink to='/service'>Service</NavLink>,
-        key: '4',
-        title: 'Menu Item 1',
-        icon: <i className='fa fa-wrench'></i>,
-    },
-    {
-        label: <NavLink to='/reminders'>Reminder</NavLink>,
-        key: '5',
-        title: 'Menu Item 1',
-        icon: <i className='fa fa-bell'></i>,
-    },
+
+    
+   
     {
         label: <NavLink to='/reports'>Reports</NavLink>,
         key: '6',
@@ -127,7 +84,7 @@ const MainTemplate = () => {
             <Sider
                 width={200}
                 className='main-template__sider'
-                style={{ backgroundColor: 'rgb(26, 46, 54)', minHeight: '100vh' }}>
+                style={{ backgroundColor: 'rgb(0,21,41)', minHeight: '100vh' }}>
                 <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']} items={menuItems}></Menu>
             </Sider>
             <Layout>

@@ -72,7 +72,7 @@ const Refueling = () => {
     };
     return (
         <Layout style={{ backgroundColor: '#fff' }}>
-            <Header>Header</Header>
+
             <Content>
                 <Form className='example' onFinish={onFinish}>
                     <h3>Example</h3>
@@ -247,7 +247,7 @@ const Refueling = () => {
                     </div>
                 </Form>
             </Content>
-            <Footer>Footer</Footer>
+
         </Layout>
     );
 };

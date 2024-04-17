@@ -10,32 +10,31 @@ import { TimePicker } from 'antd';
 import moment from 'moment';
 import FloatLabel from '../../Components/FloatLabel';
 import { useSelector } from 'react-redux';
-
+import axios from 'axios';
+import { message } from 'antd';
 
 const Reminder = () => {
-    const onFinish = values => {
-        console.log('Received values of form:', values);
+    const vehicleId = useSelector(state => state.serviceReducer.selectedRows[0].vehicle_id);
+    const onFinish = async (values) => {
 
         const data = {
-            name: name,
-            odometer: odometer,
-        };
+            comments, serviceType, odometer, time, contactMethod, date
+        }
 
-        fetch('http://localhost:3000/vehicles', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }; const serviceData = useSelector((state) => state.serviceReducer.serviceData.SERVICE_DATA);
+        console.log(values);
+        try {
+            const response = await axios.post(`http://localhost:3000/carTracking/reminder/api/${vehicleId}`, data);
+            if (response.status === 200) {
+                message.success('Data submitted successfully');
+            } else {
+                message.error('Failed to submit data');
+            }
+        } catch (error) {
+            console.error('Error submitting data:', error);
+            message.error('Failed to submit data');
+        }
+    };
+    const serviceData = useSelector((state) => state.serviceReducer.serviceData.SERVICE_DATA);
     const [comments, setComments] = useState('1234');
     const [serviceType, setServiceType] = useState('');
     const [odometer, setOdometer] = useState('1234');
@@ -44,10 +43,9 @@ const Reminder = () => {
     const [date, setDate] = useState(null);
 
 
-    // http://localhost:3000/carTracking/service/api/:vehicle_id
     return (
         <Layout style={{ backgroundColor: '#fff' }}>
-            <Header>Header</Header>
+        
             <Content>
                 <Form className='example' onFinish={onFinish}>
                     <h3>Example</h3>
@@ -145,7 +143,7 @@ const Reminder = () => {
                     </div>
                 </Form>
             </Content>
-            <Footer>Footer</Footer>
+           
         </Layout>
     );
 };

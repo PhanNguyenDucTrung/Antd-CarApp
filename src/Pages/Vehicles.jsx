@@ -5,7 +5,9 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCarServiceData, setSelectedRows, setUserId } from '../redux/reducers/serviceReducer';
-
+import { Modal } from 'antd';
+import axios from 'axios';
+import { message } from 'antd';
 const buttonStyle = {
     color: 'white',
     backgroundColor: 'red',
@@ -18,6 +20,7 @@ const buttonStyle = {
     border: 'none',
     marginLeft: '10px',
 };
+
 const Vehicles = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -29,6 +32,8 @@ const Vehicles = () => {
         localStorage.setItem('id', id);
     }
 
+
+
     const rowSelection = {
         selectedRowKeys,
 
@@ -37,6 +42,8 @@ const Vehicles = () => {
             dispatch(setSelectedRows(selectedRows));
         },
     };
+
+    // Tải data tĩnh cho selection
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -103,7 +110,7 @@ const Vehicles = () => {
                         }}>
                         <EditOutlined />
                     </button>
-                    <button style={buttonStyle} onClick={() => handleDelete(record)}>
+                    <button style={buttonStyle} onClick={() => showDeleteConfirm(record)}>
                         <DeleteOutlined />
                     </button>
                 </span>
@@ -113,42 +120,70 @@ const Vehicles = () => {
 
 
     const [data, setData] = useState(null);
+    const fetchDataVehicles = async () => {
+        try {
+
+            const response = await fetch(`http://localhost:3000/carTracking/vehicle/api/${id}`);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const jsonData = await response.json();
+            console.log(jsonData);
+            const dataWithKey = jsonData.VEHICLE_DATA.map(item => ({ key: item.vehicle_id, ...item }));
+            setData(dataWithKey);
+
+            if (dataWithKey.length > 0) {
+                console.log('Setting selected rows:', [dataWithKey[0]]);
+
+                dispatch(setSelectedRows([dataWithKey[0]]));
+                setSelectedRowKeys([dataWithKey[0].key]);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-
-                const response = await fetch(`http://localhost:3000/carTracking/vehicle/api/${id}`);
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const jsonData = await response.json();
-                console.log(jsonData);
-                const dataWithKey = jsonData.VEHICLE_DATA.map(item => ({ key: item.vehicle_id, ...item }));
-                setData(dataWithKey);
-
-                if (dataWithKey.length > 0) {
-                    console.log('Setting selected rows:', [dataWithKey[0]]);
-                    dispatch(setSelectedRows([dataWithKey[0]]));
-                    setSelectedRowKeys([dataWithKey[0].key]);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-
-        // Cleanup function
-        return () => {
-            // Perform any cleanup here if necessary
-        };
+        fetchDataVehicles();
     }, []);
 
-    const handleDelete = record => {
+
+    const showDeleteConfirm = (record) => {
+        Modal.confirm({
+            title: 'Are you sure delete this task?',
+            content: 'Some descriptions',
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                console.log('OK');
+                handleDelete(record);
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    };
+    const handleDelete = async (record) => {
         console.log('Delete', record);
-        // Add your delete logic here
+        const apiUrl = `http://localhost:3000/carTracking/vehicle/api/${record.vehicle_id}`;
+
+        try {
+            const response = await axios.delete(apiUrl);
+            if (response.status === 200) {
+                fetchDataVehicles();
+                message.success('Vehicle deleted successfully');
+            } else {
+
+                message.error('Failed to delete vehicle');
+
+            }
+        } catch (error) {
+            console.error('Error deleting vehicle:', error);
+            message.error('Failed to delete vehicle');
+
+        }
     };
 
     const handleEdit = record => {
@@ -168,6 +203,8 @@ const Vehicles = () => {
         <>
             <Button type='primary' onClick={() => navigate('/vehicle/new')}>
                 Add New
+            </Button>   <Button type='primary' onClick={() => navigate('/testdqwe')}>
+                Test
             </Button>
             <Table
                 rowSelection={{

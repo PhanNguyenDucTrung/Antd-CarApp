@@ -41,17 +41,17 @@ const Service = () => {
         console.log('Received values of form:', values);
 
         const data = {
-            name: name, // Assuming 'name' is defined somewhere else
+            name: name,
             fuelType: fuelType,
             odometer: odometer,
-            time: time, // Filling the rest based on your requirements
+            time: time,
             date: date,
             place: place,
             serviceType: serviceType,
             cost: money,
             comments: comments
         };
-      
+        http://localhost:3000/carTracking/service/api/:service_id
         fetch(`http://localhost:3000/carTracking/service/api/${vehicleId}`, {
             method: 'POST',
             headers: {
@@ -70,7 +70,7 @@ const Service = () => {
 
     return (
         <Layout style={{ backgroundColor: '#fff' }}>
-            <Header>Header</Header>
+
             <Content>
                 <Form className='example' onFinish={onFinish}>
                     <h3>Example</h3>
@@ -185,7 +185,7 @@ const Service = () => {
                     </div>
                 </Form>
             </Content>
-            <Footer>Footer</Footer>
+
         </Layout>
     );
 };
