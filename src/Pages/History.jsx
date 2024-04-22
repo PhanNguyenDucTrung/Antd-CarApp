@@ -1,13 +1,16 @@
 import { Radio } from 'antd';
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { selectMovies } from '../redux/reducers/moviesReducer';
+import { useSelector, useDispatch } from 'react-redux';
+import { setEditing } from '../redux/reducers/serviceReducer';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import { message } from 'antd';
+import { message } from 'antd'; import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 import 'react-vertical-timeline-component/style.min.css';
 
 const History = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const vehicleId = useSelector(state => state.serviceReducer.selectedRows[0].vehicle_id);
     const [data, setData] = useState([])
     const [reminderHistory, setReminderHistory] = useState([]);
@@ -38,32 +41,31 @@ const History = () => {
         } else {
             item = data[index];
         }
-        console.log(item);
-        console.log('Deleted');
+
 
         let apiUrl = '';
         let itemId = '';
 
         if (item.FUEL_OBJECT) {
-            console.log(item);
+
             itemId = item.REFUELLING_ID;
             apiUrl = `http://localhost:3000/carTracking/refuelling/api/${itemId}`;
         } else if (item.SERVICE_ID) {
-            console.log("RUN DELETE SERVICE")
+
             itemId = item.SERVICE_ID;
             apiUrl = `http://localhost:3000/carTracking/service/api/${itemId}`;
         } else {
             itemId = item.REMINDER_ID;
             apiUrl = `http://localhost:3000/carTracking/reminder/api/${itemId}`;
-            console.log('reminder URL', apiUrl);
-            return;
+
         }
 
-        console.log(apiUrl);
+
 
         axios.delete(apiUrl)
             .then(response => {
                 if (response.status === 200) {
+                    fetchDataReminderHistory();
                     fetchData(); console.log('Item deleted successfully');
                     message.success('Item deleted successfully');
                 }
@@ -76,9 +78,28 @@ const History = () => {
                 // Handle error scenario
             });
     };
-    
-    const handleEdit = () => {
+
+    const handleEdit = (index, type) => {
         console.log('Edit')
+        let item = null;
+        if (type === 'reminder') {
+            item = reminderHistory[index];
+            dispatch(setEditing(item));
+            console.log('handle Editing item reminder', item)
+            navigate('/reminder/editing');
+        } else {
+            item = data[index];
+            dispatch(setEditing(item));
+            if (item.FUEL_OBJECT) {
+                console.log('handle Editing item fuel', item)
+                navigate('/refueling/editing');
+            } else {
+                console.log('handle Editing item service', item)
+                 navigate('/service/editing')
+            }
+        }
+
+
     };
 
     useEffect(() => {
@@ -109,7 +130,7 @@ const History = () => {
                         }}
                         icon={<span style={{
                             fontWeight: 600,
-                        }}>Lasted</span>}
+                        }}>Lastest</span>}
                     />
                     {data.map((item, index) => (
                         <VerticalTimelineElement
@@ -222,7 +243,7 @@ const History = () => {
                                 <button style={{
                                     marginRight
                                         : '2px'
-                                }} onClick={() => handleEdit(index)}><i className="fa-solid fa-pen"></i></button>
+                                }} onClick={() => handleEdit(index, 'reminder')}><i className="fa-solid fa-pen"></i></button>
                                 <button onClick={() => handleDelete(index, 'reminder')}><i className="fa-solid fa-trash"></i></button>
                             </div>
 

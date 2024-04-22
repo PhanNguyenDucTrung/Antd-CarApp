@@ -1,20 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Layout, Button, Divider } from 'antd';
-// import { Radio } from 'antd';
 import { DatePicker } from 'antd';
 import { TimePicker } from 'antd';
 import { Input, Select } from 'antd';
 import FloatLabel from '../../Components/FloatLabel';
-// http://localhost:3000/carTracking/service/api/
-import { useSelector } from 'react-redux';
-
-
-const { Header, Content, Footer } = Layout;
-
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { setEditing } from '../../redux/reducers/serviceReducer';
+import { message } from 'antd';
+import moment from 'moment';
+const { Content } = Layout;
 const { TextArea } = Input;
 const { Option } = Select;
 
 const Service = () => {
+    const dispatch = useDispatch();
+
     const [time, setTime] = useState(null);
     const [date, setDate] = useState(null);
     const [place, setPlace] = useState('1234');
@@ -28,9 +29,9 @@ const Service = () => {
     const serviceData = useSelector((state) => state.serviceReducer.serviceData.SERVICE_DATA);
     const placeData = useSelector((state) => state.serviceReducer.serviceData.PLACE_DATA);
     const vehicleId = useSelector(state => state.serviceReducer.selectedRows[0].vehicle_id);
-    console.log(vehicleId);
-    console.log(fuelData);
-    console.log(placeData);
+    const editingObj = useSelector(state => state.serviceReducer.editingObj);
+    console.log('editing object', editingObj);
+
 
 
 
@@ -41,7 +42,6 @@ const Service = () => {
         console.log('Received values of form:', values);
 
         const data = {
-            name: name,
             fuelType: fuelType,
             odometer: odometer,
             time: time,
@@ -51,7 +51,27 @@ const Service = () => {
             cost: money,
             comments: comments
         };
-        http://localhost:3000/carTracking/service/api/:service_id
+        if (editingObj) {
+            fetch(`http://localhost:3000/carTracking/service/api/${vehicleId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        message.success('Item updated successfully');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
         fetch(`http://localhost:3000/carTracking/service/api/${vehicleId}`, {
             method: 'POST',
             headers: {
@@ -67,7 +87,45 @@ const Service = () => {
                 console.error('Error:', error);
             });
     };
+    useEffect(() => {
+        if (editingObj) {
 
+            setFuelType(editingObj.FUEL_TYPE)
+            setServiceType(editingObj.SERVICE_TYPE)
+            setDate(moment(editingObj.DATE, 'M/D/YYYY'))
+            setPlace(editingObj.PLACE)
+            setMoney(parseInt(editingObj.COST))
+            setOdometer(parseInt(editingObj.ODOMETER))
+            setTime(
+                moment(editingObj.TIME, 'hh:mm:ss A')
+            )
+            setComments(editingObj.COMMENTS)
+
+        }
+
+        if (location.pathname === '/reminder/create') {
+
+            setFuelType('')
+            setServiceType('')
+            setDate(null)
+            setPlace('')
+            setMoney('')
+            setOdometer('')
+            setTime(
+                moment('12:00', 'HH:mm')
+            )
+            setComments('')
+
+            dispatch(setEditing(null));
+
+        }
+
+        return () => {
+
+            dispatch(setEditing(null));
+        };
+
+    }, [editingObj, location.pathname]);
     return (
         <Layout style={{ backgroundColor: '#fff' }}>
 

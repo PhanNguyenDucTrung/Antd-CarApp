@@ -30,6 +30,7 @@ const FirstVehicleModal = () => {
     const [model, setModel] = useState('');
     const [name, setName] = useState('');
     const [carType, setCarType] = useState('truck');
+    const vehicles = useSelector(state => state.serviceReducer.vehiclesData);
     const handleRegister = () => {
         const data = {
             userId: userId,
@@ -48,10 +49,11 @@ const FirstVehicleModal = () => {
                         key,
                         duration: 2,
                     });
-                    dispatch(setAddNewVehicle(true)); // Corrected dispatch call
-                 
-                        navigate(`/user/${userId}`);
-                    
+
+                    dispatch(setAddNewVehicle(false)); // Corrected dispatch call
+
+                    navigate(`/user/${userId}`);
+
 
                 }
             })
@@ -62,6 +64,7 @@ const FirstVehicleModal = () => {
             });
     };
 
+    if (vehicles.length > 0) { navigate(`/user/${userId}`) }
     return (
         <div>
             <Modal title="Add your new vehicle"

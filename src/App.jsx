@@ -37,11 +37,15 @@ const App = () => {
                     <Route path='/refueling/create' element={<NewRefueling />} />
                     <Route path='/service/create' element={<Service />} />
                     <Route path='/reminder/create' element={<Reminder />} />
+
+                    <Route path='/refueling/editing' element={<NewRefueling />} />
+                    <Route path='/service/editing' element={<Service />} />
+                    <Route path='/reminder/editing' element={<Reminder />} />
                 </Route>
 
                 <Route path='/first-vehicle' element={<FirstVehicleModal />} />
 
-                <Route path='*' element={<Test />} />
+
             </Routes>
         </BrowserRouter>
     );

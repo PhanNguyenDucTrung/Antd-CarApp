@@ -4,7 +4,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCarServiceData, setSelectedRows, setUserId } from '../redux/reducers/serviceReducer';
+import { setCarServiceData, setSelectedRows, setSelectedRowKeys, setUserId, setVehicles, setAddNewVehicle } from '../redux/reducers/serviceReducer';
 import { Modal } from 'antd';
 import axios from 'axios';
 import { message } from 'antd';
@@ -26,8 +26,10 @@ const Vehicles = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const newVehicle = useSelector((state) => state.serviceReducer.addNewVehicle);
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    console.log('New vechicle', newVehicle);
+    const vehicles = useSelector(state => state.serviceReducer.vehiclesData);
+    const selectedRowKeys = useSelector(state => state.serviceReducer.selectedRowKeys);
+
+
     if (id) {
         localStorage.setItem('id', id);
     }
@@ -38,7 +40,7 @@ const Vehicles = () => {
         selectedRowKeys,
 
         onChange: (selectedRowKeys, selectedRows) => {
-            setSelectedRowKeys(selectedRowKeys);
+            dispatch(setSelectedRowKeys(selectedRowKeys));
             dispatch(setSelectedRows(selectedRows));
         },
     };
@@ -119,7 +121,7 @@ const Vehicles = () => {
     ];
 
 
-    const [data, setData] = useState(null);
+
     const fetchDataVehicles = async () => {
         try {
 
@@ -131,13 +133,17 @@ const Vehicles = () => {
             const jsonData = await response.json();
             console.log(jsonData);
             const dataWithKey = jsonData.VEHICLE_DATA.map(item => ({ key: item.vehicle_id, ...item }));
-            setData(dataWithKey);
+            dispatch(setVehicles(dataWithKey))
+            if (dataWithKey.length === 1) {
 
-            if (dataWithKey.length > 0) {
+                dispatch(setSelectedRowKeys([dataWithKey[0].key]));
+            }
+            if (dataWithKey.length > 1) {
+
                 console.log('Setting selected rows:', [dataWithKey[0]]);
+                // setSelectedRowKeys([dataWithKey[0].key]);
 
-                dispatch(setSelectedRows([dataWithKey[0]]));
-                setSelectedRowKeys([dataWithKey[0].key]);
+
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -146,6 +152,7 @@ const Vehicles = () => {
 
     useEffect(() => {
         fetchDataVehicles();
+        if (id) { dispatch(setUserId(id)) }
     }, []);
 
 
@@ -173,6 +180,7 @@ const Vehicles = () => {
             const response = await axios.delete(apiUrl);
             if (response.status === 200) {
                 fetchDataVehicles();
+
                 message.success('Vehicle deleted successfully');
             } else {
 
@@ -190,13 +198,15 @@ const Vehicles = () => {
         console.log('Edit', record);
         // Add your edit logic here
     };
-    if (!data) {
+    if (!vehicles) {
         return <Spin />;
     }
 
-    if (data.length === 0 && newVehicle === false) {
-        dispatch(setUserId(id))
+    if (vehicles.length === 0) {
+        console.log('RUN WHEN vehicles 0')
+        dispatch(setAddNewVehicle(true))
         navigate('/first-vehicle');
+
     }
 
     return (
@@ -212,7 +222,7 @@ const Vehicles = () => {
                     ...rowSelection,
                 }}
                 columns={columns}
-                dataSource={data}
+                dataSource={vehicles}
                 style={{
                     minHeight: '100vh',
                     width: '100%',

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Form, Layout, Button, Divider } from 'antd';
 import { DatePicker } from 'antd';
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 import { Input, Select } from 'antd';
 const { TextArea } = Input;
 const { Option } = Select;
@@ -9,12 +9,16 @@ import { Radio } from 'antd';
 import { TimePicker } from 'antd';
 import moment from 'moment';
 import FloatLabel from '../../Components/FloatLabel';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { message } from 'antd';
-
+import { message } from 'antd'; import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { setEditing } from '../../redux/reducers/serviceReducer';
 const Reminder = () => {
     const vehicleId = useSelector(state => state.serviceReducer.selectedRows[0].vehicle_id);
+    const editingObj = useSelector(state => state.serviceReducer.editingObj);
+    const dispatch = useDispatch();
+
     const onFinish = async (values) => {
 
         const data = {
@@ -22,6 +26,20 @@ const Reminder = () => {
         }
 
         console.log(values);
+        if (editingObj) {
+            try {
+                const response = await axios.patch(`http://localhost:3000/carTracking/reminder/api/${vehicleId}`, data);
+                if (response.status === 200) {
+                    message.success('Data updated successfully');
+                } else {
+                    message.error('Failed to submit data');
+                }
+            } catch (error) {
+                console.error('Error submitting data:', error);
+                message.error('Failed to submit data');
+            }
+            return;
+        }
         try {
             const response = await axios.post(`http://localhost:3000/carTracking/reminder/api/${vehicleId}`, data);
             if (response.status === 200) {
@@ -35,17 +53,47 @@ const Reminder = () => {
         }
     };
     const serviceData = useSelector((state) => state.serviceReducer.serviceData.SERVICE_DATA);
-    const [comments, setComments] = useState('1234');
+    const [comments, setComments] = useState('');
     const [serviceType, setServiceType] = useState('');
-    const [odometer, setOdometer] = useState('1234');
+    const [odometer, setOdometer] = useState('');
     const [time, setTime] = useState(moment('12:00', 'HH:mm'));
     const [contactMethod, setContactMethod] = useState('');
     const [date, setDate] = useState(null);
+    useEffect(() => {
+        if (editingObj) {
+            setServiceType(editingObj.SERVICE_TYPE)
+            setDate(moment(editingObj.DATE, 'M/D/YYYY'))
 
+            setOdometer(parseInt(editingObj.ODOMETER))
+            setTime(
+                moment(editingObj.TIME, 'hh:mm:ss A')
+            )
+            setComments(editingObj.COMMENTS)
+            setContactMethod(editingObj.REMINDER_TYPE)
+        }
 
+        if (location.pathname === '/reminder/create') {
+            setContactMethod('')
+            setServiceType('')
+            setDate(null)
+            setOdometer('')
+            setTime(
+                moment('12:00', 'HH:mm')
+            )
+            setComments('')
+
+            dispatch(setEditing(null));
+
+        }
+        return () => {
+
+            dispatch(setEditing(null));
+        };
+
+    }, [editingObj, location.pathname]);
     return (
         <Layout style={{ backgroundColor: '#fff' }}>
-        
+
             <Content>
                 <Form className='example' onFinish={onFinish}>
                     <h3>Example</h3>
@@ -143,7 +191,7 @@ const Reminder = () => {
                     </div>
                 </Form>
             </Content>
-           
+
         </Layout>
     );
 };

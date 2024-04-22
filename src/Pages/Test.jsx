@@ -1,7 +1,7 @@
 import { Radio } from 'antd';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { selectMovies } from '../redux/reducers/moviesReducer';
+
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import { message } from 'antd';
 import axios from 'axios';
@@ -56,7 +56,7 @@ const Test = () => {
       itemId = item.REMINDER_ID;
       apiUrl = `http://localhost:3000/carTracking/reminder/api/${itemId}`;
       console.log('reminder URL', apiUrl);
-      return;
+
     }
 
     console.log(apiUrl);
@@ -64,6 +64,7 @@ const Test = () => {
     axios.delete(apiUrl)
       .then(response => {
         if (response.status === 200) {
+          fetchDataReminderHistory();
           fetchData(); console.log('Item deleted successfully');
           message.success('Item deleted successfully');
         }
@@ -95,53 +96,53 @@ const Test = () => {
         width: 900
       }
       }>
-       <VerticalTimeline layout={'1-column-left'}>
-  {data.map((item, index) => (
-    <VerticalTimelineElement
-      key={index}
-      iconStyle={{
-        background: 'rgb(16, 204, 82)',
-        color: '#fff',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-      icon={item.FUEL_OBJECT ? <i className="fa-solid fa-gas-pump"></i> : <i className="fa-solid fa-oil-can"></i>}
-    >
-      <h3 className="vertical-timeline-element-title">{item.FUEL_OBJECT ? 'Refueling' : item.SERVICE_TYPE}</h3>
-      {/* Date moved below */}
-      <p style={{ marginBottom: '10px' }}>
-        <i className="fa-solid fa-calendar-days me-2"></i>
-        <span>{item.DATE}</span>
-      </p>
-      <h4 className="vertical-timeline-element-subtitle mt-2"> <i className="fa-solid fa-location-dot"></i>  {item.PLACE ? (<>  {`${item.PLACE}`}</>) : `${item.GAS_STATION}`}</h4>
-      <p> <i className="fa-solid fa-gauge me-2"></i>{item.ODOMETER}</p>
+        <VerticalTimeline layout={'1-column-left'}>
+          {data.map((item, index) => (
+            <VerticalTimelineElement
+              key={index}
+              iconStyle={{
+                background: 'rgb(16, 204, 82)',
+                color: '#fff',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              icon={item.FUEL_OBJECT ? <i className="fa-solid fa-gas-pump"></i> : <i className="fa-solid fa-oil-can"></i>}
+            >
+              <h3 className="vertical-timeline-element-title">{item.FUEL_OBJECT ? 'Refueling' : item.SERVICE_TYPE}</h3>
+              {/* Date moved below */}
+              <p style={{ marginBottom: '10px' }}>
+                <i className="fa-solid fa-calendar-days me-2"></i>
+                <span>{item.DATE}</span>
+              </p>
+              <h4 className="vertical-timeline-element-subtitle mt-2"> <i className="fa-solid fa-location-dot"></i>  {item.PLACE ? (<>  {`${item.PLACE}`}</>) : `${item.GAS_STATION}`}</h4>
+              <p> <i className="fa-solid fa-gauge me-2"></i>{item.ODOMETER}</p>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {item.FUEL_OBJECT && item.FUEL_OBJECT.map((fuel, fuelIndex) => (
-          <div key={fuelIndex} style={{ width: '50%' }}>
-            <p><i className="fa-solid fa-gas-pump me-2"></i>{fuel.fuel_type}</p>
-            <p><i className="fa-solid fa-industry me-2"></i> {fuel.fuel_capacity}L</p>
-            <p><i className="fa-solid fa-money-bill me-2"></i>{fuel.fuel_price}đ</p>
-          </div>
-        ))}
-      </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {item.FUEL_OBJECT && item.FUEL_OBJECT.map((fuel, fuelIndex) => (
+                  <div key={fuelIndex} style={{ width: '50%' }}>
+                    <p><i className="fa-solid fa-gas-pump me-2"></i>{fuel.fuel_type}</p>
+                    <p><i className="fa-solid fa-industry me-2"></i> {fuel.fuel_capacity}L</p>
+                    <p><i className="fa-solid fa-money-bill me-2"></i>{fuel.fuel_price}đ</p>
+                  </div>
+                ))}
+              </div>
 
-      {/* Total Price moved to bottom */}
-      <p>{item.TOTAL_PRICE}</p>
+              {/* Total Price moved to bottom */}
+              <p>{item.TOTAL_PRICE}</p>
 
-      <div style={{
-        position: 'absolute',
-        top: '10px',
-        right: '10px',
-      }}>
-        <button onClick={() => handleEdit(index)}><i className="fa-solid fa-pen"></i></button>
-        <button onClick={() => handleDelete(index)}><i className="fa-solid fa-trash"></i></button>
-      </div>
+              <div style={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+              }}>
+                <button onClick={() => handleEdit(index)}><i className="fa-solid fa-pen"></i></button>
+                <button onClick={() => handleDelete(index)}><i className="fa-solid fa-trash"></i></button>
+              </div>
 
-    </VerticalTimelineElement>
-  ))}
-       </VerticalTimeline>
+            </VerticalTimelineElement>
+          ))}
+        </VerticalTimeline>
 
       </div >
 

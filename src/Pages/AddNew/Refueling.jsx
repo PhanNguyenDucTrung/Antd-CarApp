@@ -7,18 +7,19 @@ import FloatLabel from '../../Components/FloatLabel';
 import moment from 'moment';
 import { message } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setEditing } from '../../redux/reducers/serviceReducer';
+import { useLocation } from 'react-router-dom';
+
 const { TextArea } = Input;
 const { Option } = Select;
-const { Header, Content, Footer } = Layout;
-
+const { Content } = Layout;
 
 const Refueling = () => {
-    const [active, setActive] = useState('active');
-    const onChange = e => {
-        setActive(e.target.value);
-    };
+    const location = useLocation();
 
+    const dispatch = useDispatch()
     const [time, setTime] = useState(moment('12:00', 'HH:mm'));
     const [fields, setFields] = useState([{ fuelCapacity: '', fuelType: '', fuelPrice: '' }]);
     const [date, setDate] = useState(null);
@@ -28,7 +29,8 @@ const Refueling = () => {
     const vehicleId = useSelector(state => state.serviceReducer.selectedRows[0].vehicle_id);
     const fuelData = useSelector((state) => state.serviceReducer.serviceData.FUEL_DATA);
     const gasStationData = useSelector((state) => state.serviceReducer.serviceData.GAS_STATION_DATA);
-    console.log('gasastation', gasStationData);
+    const editingObj = useSelector(state => state.serviceReducer.editingObj);
+    console.log('editing object', editingObj);
 
     // gửi dữ liệu lên server
     const onFinish = values => {
@@ -44,6 +46,28 @@ const Refueling = () => {
         };
         console.log(data);
 
+        if (editingObj) {
+            fetch(`http://localhost:3000/carTracking/refuelling/api/${vehicleId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        message.success('Item updated successfully');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            return;
+        }
         fetch(`http://localhost:3000/carTracking/refuelling/api/${vehicleId}`, {
             method: 'POST',
             headers: {
@@ -70,6 +94,45 @@ const Refueling = () => {
         newFields.pop();
         setFields(newFields);
     };
+
+    useEffect(() => {
+        if (editingObj) {
+            setGasStation(editingObj.GAS_STATION
+            );
+            setDate(moment(editingObj.DATE, 'M/D/YYYY'))
+
+            setOdometer(parseInt(editingObj.ODOMETER))
+            setTime(
+                moment(editingObj.TIME, 'hh:mm:ss A')
+            )
+            setComments(editingObj.COMMENTS)
+            setFields(editingObj.FUEL_OBJECT.map(item => ({
+                fuelCapacity: item.fuel_capacity || '',
+                fuelType: item.fuel_type || '',
+                fuelPrice: item.fuel_price || ''
+            })));
+        }
+
+        if (location.pathname === '/refueling/create') {
+            setGasStation('');
+            setDate(null)
+            setOdometer('')
+            setTime(
+                moment('12:00', 'HH:mm')
+            )
+            setComments('')
+            setFields([{ fuelCapacity: '', fuelType: '', fuelPrice: '' }]);
+            dispatch(setEditing(null));
+
+        } else if (location.pathname === '/refueling/editing') {
+
+        }
+        return () => {
+
+            dispatch(setEditing(null));
+        };
+
+    }, [editingObj, location.pathname]);
     return (
         <Layout style={{ backgroundColor: '#fff' }}>
 
@@ -116,7 +179,7 @@ const Refueling = () => {
                     <Divider />
                     <div className='form-group'>
                         <div className='form-icon'>
-                            <i class="fa-solid fa-gas-pump"></i>
+                            <i className="fa-solid fa-gas-pump"></i>
                         </div>
                         <FloatLabel label='Gas Station' name='gasStation' value={gasStation}>
                             <Select showSearch onChange={value => setGasStation(value)} value={gasStation}>
