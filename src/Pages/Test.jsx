@@ -24,8 +24,8 @@ const Test = () => {
             soonest_booking_date: '2024-04-20T00:00:00.000Z',
             shop_phone: 1234567890,
             shop_free_dates: ['2024-04-22T00:00:00.000Z', '2024-04-25T00:00:00.000Z'],
-            shop_reputation_star: 0,
-            shop_reviewers: [],
+            shop_reputation_star: 5,
+            shop_reviewers: [1, 2, 34, 5],
             shop_appointments: [],
             shop_coordinate: [10.872109651019828, 106.62046779388074],
             __v: 0,
@@ -39,7 +39,7 @@ const Test = () => {
             shop_name: 'Shop 2',
             shop_address: '456 Elm St, City, Country',
             shop_distance: 7,
-            open_time: '2024-04-20T02:00:00.000Z',
+            open_time: '2024-05-20T02:00:00.000Z',
             soonest_booking_time: '2024-04-20T02:00:00.000Z',
             soonest_booking_date: '2024-04-20T00:00:00.000Z',
             shop_phone: 9876543210,
@@ -73,33 +73,114 @@ const Test = () => {
                 maxZoom: 19,
             }).addTo(mapRef.current);
 
-            const icon = L.icon({
-                iconUrl: 'https://www.freeiconspng.com/thumbs/retail-store-icon/retail-store-icon-18.png',
-                iconSize: [20, 20],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41],
-            });
 
             const markers = stores.map(item => {
                 const latitude = parseFloat(item.shop_coordinate[0]);
                 const longitude = parseFloat(item.shop_coordinate[1]);
-                return L.marker([latitude, longitude], {
-                    icon,
-                })
+
+                const icon = L.divIcon({
+                    className: 'custom-icon',
+                    html: `<div>${item.shop_reputation_star} ⭐</div>`,
+                    iconSize: [60, 36],
+                    popupAnchor: [1, -34],
+                });
+
+                const popupContent = `
+                    <div
+                        style={{
+                            display: 'flex',
+                            gap: '10px',
+                            height: '300px',
+                            alignItems: 'center',
+                            padding: '10px',
+                            border: '1px solid #ccc',
+                            marginBottom: '10px',
+                        }}
+                    >
+                        <div
+                            style="
+                                width: 300px;
+                                overflow: 'hidden';
+                                border-radius: 5px;
+                          "
+                        >
+                            <img
+                                src=${item.shop_images[0]}
+                                alt=${item.shop_name}
+                                style="
+                                    width: 100%;
+                                    objectFit: 'cover';
+                                "
+                            />
+                        </div>
+                        <div style={{
+                            height: '100%',
+                            alignItems: 'flex-start', // Add this line
+                        }}>
+                            <div style="display: flex; justify-content: space-between; align-items: center">
+                                <h2 style="margin-top: 0">${item.shop_name}</h2>
+                                <p style="margin-top: 0">${item.shop_reputation_star} ⭐(${item.shop_reviewers.length})</p>
+                            </div>
+            
+                            <p style="
+                                margin:0;
+                                margin-top: 5px;
+                            ">${item.shop_description}</p>
+                            <p style="
+                            margin:0;
+                            margin-top: 5px;
+                        ">${item.shop_address}</p>
+                            <p><i class="fa-regular fa-clock"></i> Opens: ${new Date(item.open_time).toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true,
+                    weekday: 'short'
+                })}</p>
+                            <p style="margin-top: 5px"><i class="fa-solid fa-phone"></i> ${item.shop_phone}</p>
+                            <p style="margin-top: 5px"><i class="fa-solid fa-bolt-lightning"></i> Soonest availability ${new Date(item.soonest_booking_date).toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true,
+                    weekday: 'short'
+                })}</p>
+                            
+                    <div style="
+                                margin-top: 5px;
+                                color: #ffffff;
+                                padding: 12px 20px;
+                                background-color: rgb(0, 150, 209);
+                                text-align: center;
+                                border-radius: 4px;
+                            ">Check Availability</div>
+                        </div>
+                    </div>
+                `
+
+                return L.marker([latitude, longitude], { icon })
                     .addTo(mapRef.current)
-                    .bindPopup(`<b>${item.shop_name}</b><br>${item.shop_short_description}`)
+                    .bindPopup(popupContent)
                     .openPopup();
             });
 
-            stores.forEach(item => {
-                const marker = L.marker([parseFloat(item.shop_coordinate[0]), parseFloat(item.shop_coordinate[1])], {
-                    icon,
-                })
-                    .addTo(mapRef.current)
-                    .bindPopup(`<b>${item.shop_name}</b><br>${item.shop_description}`);
-                setMarkers(prevMarkers => [...prevMarkers, marker]);
-            });
+
+            // stores.forEach(item => {
+            //     const latitude = parseFloat(item.shop_coordinate[0]);
+            //     const longitude = parseFloat(item.shop_coordinate[1]);
+
+            //     const icon = L.divIcon({
+            //         className: 'custom-icon',
+            //         html: `<div>${(item.shop_reputation_star)} ⭐</div>`,
+            //         iconSize: [30, 26],
+            //         iconAnchor: [12, 41],
+            //         popupAnchor: [1, -34],
+            //     });
+
+            //     const marker = L.marker([latitude, longitude], { icon })
+            //         .addTo(mapRef.current)
+            //         .bindPopup(`<b>${item.shop_name}</b><br>${item.shop_description}`);
+
+            //     setMarkers(prevMarkers => [...prevMarkers, marker]);
+            // });
 
             const group = new L.featureGroup(markers);
             mapRef.current.fitBounds(group.getBounds());
@@ -137,10 +218,13 @@ const Test = () => {
         });
     }, [mapRef, markers]);
     return (
-        <div style={{ display: 'flex', width: '100%', height: '600px', margin: 'auto', maxWidth: '1200px' }}>
-            <div id='map' style={{ flex: '1', minWidth: '800px' }}></div>
+        <div style={{ display: 'flex', width: '100%', height: '680px', margin: 'auto', width: '1400px' }}>
+            <div id='map' style={{ flex: '1', minWidth: '880px' }}></div>
             <div style={{ flex: '1', overflowY: 'auto' }}>
-                <div>
+                <div style={{
+                    paddingLeft: '7px',
+                    fontSize: '28px'
+                }}>
                     {(stores.length === 0 && <p>No stores found</p>) || <p>Found {stores.length} stores nearby</p>}
                 </div>
 
@@ -165,7 +249,7 @@ const Test = () => {
                             onClick={() => handleStoreClick(store)}>
                             <div
                                 style={{
-                                    width: '300px',
+                                    width: '360px',
                                     height: '100%',
                                     overflow: 'hidden',
                                     borderRadius: '5px',
@@ -174,25 +258,51 @@ const Test = () => {
                                     src={store.shop_images[0]}
                                     alt={store.shop_name}
                                     style={{
-                                        width: '100%',
+                                        width: '360px',
                                         height: '100%',
                                         objectFit: 'cover',
                                     }}
                                 />
                             </div>
-                            <div>
-                                <h2>{store.shop_name}</h2>
-                                <p>{store.shop_description}</p>
+                            <div style={{
+                                height: '100%',
+                                alignItems: 'flex-start', // Add this line
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <h2 style={{ marginTop: 0 }}>{store.shop_name}</h2>
+                                    <p style={{ marginTop: 0 }}>{store.shop_reputation_star} ⭐({store.shop_reviewers.length})</p>
+                                </div>
+
+                                <p style={{
+                                    margin: 0
+                                }}>{store.shop_description}</p>
                                 <p>{store.shop_address}</p>
-                                <p>{store.shop_phone}</p>
-                                <a href={store.shop_website}>Visit Website</a>
-                                {/* Add more fields as needed */}
+                                <p><i className="fa-regular fa-clock"></i> Opens: {new Date(store.open_time).toLocaleTimeString('en-US', {
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true,
+                                    weekday: 'short'
+                                })}</p>
+                                <p><i className="fa-solid fa-phone"></i> {store.shop_phone}</p>
+                                <p><i className="fa-solid fa-bolt-lightning"></i> Soonest availability {new Date(store.soonest_booking_date).toLocaleTimeString('en-US', {
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true,
+                                    weekday: 'short'
+                                })}</p>
+                                <div style={{
+                                    padding: '12px 20px'
+                                    , backgroundColor: 'rgb(0, 150, 209)',
+                                    textAlign: 'center',
+                                    borderRadius: '4px'
+                                }}>Check Availability</div>
+
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 export default Test;

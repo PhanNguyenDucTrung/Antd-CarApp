@@ -103,14 +103,14 @@ const Reminder = () => {
                             <i className='fa-solid fa-phone'></i> {/* Replace with the icon you want to use */}
                         </div>
                         <FloatLabel
-                            label='Contact Method'
-                            name='contactMethod'
+                            label='Reminding'
+                            name='Reminding'
                             value={contactMethod}
                             className='label-float'>
                             <Radio.Group onChange={e => setContactMethod(e.target.value)} value={contactMethod}>
-                                <Radio value='phone'>Phone</Radio>
-                                <Radio value='email'>Email</Radio>
-                                <Radio value='both'>Both</Radio>
+                                <Radio value='Yes'>Yes</Radio>
+                                <Radio value='No'>No</Radio>
+
                             </Radio.Group>
                         </FloatLabel>
                     </div>

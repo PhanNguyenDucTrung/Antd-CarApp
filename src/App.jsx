@@ -5,6 +5,7 @@ import History from './Pages/History.jsx';
 import Test from './Pages/Test.jsx';
 
 import './styles.css';
+
 import MainTemplate from './Templates/MainTemplate.jsx';
 import Refueling from './Pages/Refueling.jsx';
 import NewRefueling from './Pages/AddNew/Refueling.jsx';
@@ -16,6 +17,7 @@ import Settings from './Pages/Settings.jsx';
 import Reminder from './Pages/AddNew/Reminder.jsx';
 import Vehicles from './Pages/Vehicles.jsx';
 import FirstVehicleModal from './Pages/FirstVehicleModal.jsx'
+import PickDate from './Pages/PickDate.jsx'
 
 const App = () => {
     return (
@@ -25,7 +27,8 @@ const App = () => {
                     <Route path='/user/:id' element={<Vehicles />} />
                     <Route path='/history' element={<History />} />
                     <Route path='/vehicles' element={<Vehicles />} />
-
+                    <Route path='/test' element={<Test />} />
+                    <Route path='/date' element={<PickDate />} />
                     <Route path="/vehicle/edit/:id" element={<VehicleEdit />} />
                     <Route path='/vehicle/new' element={<VehicleEdit />} />
 

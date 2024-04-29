@@ -122,7 +122,7 @@ const History = () => {
                 <VerticalTimeline layout={'1-column-left'}>
                     <VerticalTimelineElement
                         iconStyle={{
-                            background: 'rgb(16, 204, 82)',
+                            background: '#795548',
                             color: '#fff',
                             display: 'flex',
                             justifyContent: 'center',
@@ -136,7 +136,7 @@ const History = () => {
                         <VerticalTimelineElement
                             key={index}
                             iconStyle={{
-                                background: 'rgb(16, 204, 82)',
+                                background: '#FF9800',
                                 color: '#fff',
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -145,12 +145,13 @@ const History = () => {
                             icon={item.FUEL_OBJECT ? <i className="fa-solid fa-gas-pump"></i> : <i className="fa-solid fa-oil-can"></i>}
                         >
                             <h3 className="vertical-timeline-element-title">{item.FUEL_OBJECT ? 'Refueling' : item.SERVICE_TYPE}</h3>
-                            {/* Date moved below */}
+                            <br></br>
+                            <h4 className="vertical-timeline-element-subtitle mt-2"> <i className="fa-solid fa-location-dot"></i>  {item.PLACE ? (<>  {`${item.PLACE}`}</>) : `${item.GAS_STATION}`}</h4>
                             <p style={{ marginBottom: '10px' }}>
-                                <i className="fa-solid fa-calendar-days me-2"></i>
+                                <i className="fa-solid fa-calendar-days me-10"></i>
                                 <span>{item.DATE}</span>
                             </p>
-                            <h4 className="vertical-timeline-element-subtitle mt-2"> <i className="fa-solid fa-location-dot"></i>  {item.PLACE ? (<>  {`${item.PLACE}`}</>) : `${item.GAS_STATION}`}</h4>
+                        
                             <p> <i className="fa-solid fa-gauge me-2"></i>{item.ODOMETER}</p>
 
                             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -179,7 +180,7 @@ const History = () => {
                     ))}
                     <VerticalTimelineElement
                         iconStyle={{
-                            background: 'rgb(16, 204, 82)',
+                            background: '#795548',
                             color: '#fff',
                             display: 'flex',
                             justifyContent: 'center',
@@ -201,7 +202,7 @@ const History = () => {
                 <VerticalTimeline layout={'1-column-left'}>
                     <VerticalTimelineElement
                         iconStyle={{
-                            background: 'rgb(16, 204, 82)',
+                            background: '#795548',
                             color: '#fff',
                             display: 'flex',
                             justifyContent: 'center',
@@ -221,7 +222,7 @@ const History = () => {
 
                             }
                             iconStyle={{
-                                background: 'rgb(16, 204, 82)',
+                                background: '#FF9800',
                                 color: '#fff',
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -251,7 +252,7 @@ const History = () => {
                     ))}
                     <VerticalTimelineElement
                         iconStyle={{
-                            background: 'rgb(16, 204, 82)',
+                            background: '#795548',
                             color: '#fff',
                             display: 'flex',
                             justifyContent: 'center',
