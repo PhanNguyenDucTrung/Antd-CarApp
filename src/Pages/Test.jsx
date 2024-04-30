@@ -1,56 +1,15 @@
 import React, { useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import L from 'leaflet';
 import { useState } from 'react';
 import 'leaflet/dist/leaflet.css';
+import { NavLink } from 'react-router-dom';
 
 const Test = () => {
     const mapRef = useRef(null);
     const [markers, setMarkers] = useState([]);
-    const stores = [
-        {
-            _id: '6623be8e8c5bdc3ffcd572c1',
-            shop_images: [
-                'https://storage.googleapis.com/rp-production-public-content/jcr587tax0uxwkqj136ehb43e4yd',
-                'https://storage.googleapis.com/rp-production-public-content/TT1KNaGpBcTX7u8tPUCMququ ',
-            ],
-            shop_website: 'https://www.oceanworksberkeley.com/',
-            shop_description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            shop_short_description: 'Lorem ipsum dolor sit amet.',
-            shop_name: 'Oceanworks',
-            shop_address: '123 Main St, City, Country',
-            shop_distance: 5,
-            open_time: '2024-04-20T02:00:00.000Z',
-            soonest_booking_time: '2024-04-20T01:00:00.000Z',
-            soonest_booking_date: '2024-04-20T00:00:00.000Z',
-            shop_phone: 1234567890,
-            shop_free_dates: ['2024-04-22T00:00:00.000Z', '2024-04-25T00:00:00.000Z'],
-            shop_reputation_star: 5,
-            shop_reviewers: [1, 2, 34, 5],
-            shop_appointments: [],
-            shop_coordinate: [10.872109651019828, 106.62046779388074],
-            __v: 0,
-        },
-        {
-            _id: '6623be8e8c5bdc3ffcd572c2',
-            shop_images: ['https://storage.googleapis.com/rp-production-public-content/x15uimo8l7ktwo27tldid76iprum'],
-            shop_website: 'https://www.example.com/shop2',
-            shop_description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem.',
-            shop_short_description: 'Sed ut perspiciatis unde omnis iste.',
-            shop_name: 'Shop 2',
-            shop_address: '456 Elm St, City, Country',
-            shop_distance: 7,
-            open_time: '2024-05-20T02:00:00.000Z',
-            soonest_booking_time: '2024-04-20T02:00:00.000Z',
-            soonest_booking_date: '2024-04-20T00:00:00.000Z',
-            shop_phone: 9876543210,
-            shop_free_dates: [],
-            shop_reputation_star: 0,
-            shop_reviewers: [],
-            shop_appointments: [],
-            shop_coordinate: [10.861437842870101, 106.63181186716584],
-            __v: 0,
-        },
-    ];
+    const stores = useSelector(state => state.serviceReducer.stores);
+    console.log(stores);
     const handleStoreClick = store => {
         const latitude = parseFloat(store.shop_coordinate[0]);
         const longitude = parseFloat(store.shop_coordinate[1]);
@@ -72,7 +31,6 @@ const Test = () => {
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
             }).addTo(mapRef.current);
-
 
             const markers = stores.map(item => {
                 const latitude = parseFloat(item.shop_coordinate[0]);
@@ -119,7 +77,9 @@ const Test = () => {
                         }}>
                             <div style="display: flex; justify-content: space-between; align-items: center">
                                 <h2 style="margin-top: 0">${item.shop_name}</h2>
-                                <p style="margin-top: 0">${item.shop_reputation_star} ⭐(${item.shop_reviewers.length})</p>
+                                <p style="margin-top: 0">${item.shop_reputation_star} ⭐(${
+                    item.shop_reviewers.length
+                })</p>
                             </div>
             
                             <p style="
@@ -130,19 +90,24 @@ const Test = () => {
                             margin:0;
                             margin-top: 5px;
                         ">${item.shop_address}</p>
-                            <p><i class="fa-regular fa-clock"></i> Opens: ${new Date(item.open_time).toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true,
-                    weekday: 'short'
-                })}</p>
+                            <p><i class="fa-regular fa-clock"></i> Opens: ${new Date(item.open_time).toLocaleTimeString(
+                                'en-US',
+                                {
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true,
+                                    weekday: 'short',
+                                }
+                            )}</p>
                             <p style="margin-top: 5px"><i class="fa-solid fa-phone"></i> ${item.shop_phone}</p>
-                            <p style="margin-top: 5px"><i class="fa-solid fa-bolt-lightning"></i> Soonest availability ${new Date(item.soonest_booking_date).toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true,
-                    weekday: 'short'
-                })}</p>
+                            <p style="margin-top: 5px"><i class="fa-solid fa-bolt-lightning"></i> Soonest availability ${new Date(
+                                item.soonest_booking_date
+                            ).toLocaleTimeString('en-US', {
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                hour12: true,
+                                weekday: 'short',
+                            })}</p>
                             
                     <div style="
                                 margin-top: 5px;
@@ -154,14 +119,13 @@ const Test = () => {
                             ">Check Availability</div>
                         </div>
                     </div>
-                `
+                `;
 
                 return L.marker([latitude, longitude], { icon })
                     .addTo(mapRef.current)
                     .bindPopup(popupContent)
                     .openPopup();
             });
-
 
             // stores.forEach(item => {
             //     const latitude = parseFloat(item.shop_coordinate[0]);
@@ -218,13 +182,14 @@ const Test = () => {
         });
     }, [mapRef, markers]);
     return (
-        <div style={{ display: 'flex', width: '100%', height: '680px', margin: 'auto', width: '1400px' }}>
+        <div style={{ display: 'flex', height: '680px', margin: 'auto', width: '1400px' }}>
             <div id='map' style={{ flex: '1', minWidth: '880px' }}></div>
             <div style={{ flex: '1', overflowY: 'auto' }}>
-                <div style={{
-                    paddingLeft: '7px',
-                    fontSize: '28px'
-                }}>
+                <div
+                    style={{
+                        paddingLeft: '7px',
+                        fontSize: '28px',
+                    }}>
                     {(stores.length === 0 && <p>No stores found</p>) || <p>Found {stores.length} stores nearby</p>}
                 </div>
 
@@ -264,45 +229,63 @@ const Test = () => {
                                     }}
                                 />
                             </div>
-                            <div style={{
-                                height: '100%',
-                                alignItems: 'flex-start', // Add this line
-                            }}>
+                            <div
+                                style={{
+                                    height: '100%',
+                                    alignItems: 'flex-start', // Add this line
+                                }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <h2 style={{ marginTop: 0 }}>{store.shop_name}</h2>
-                                    <p style={{ marginTop: 0 }}>{store.shop_reputation_star} ⭐({store.shop_reviewers.length})</p>
+                                    <p style={{ marginTop: 0 }}>
+                                        {store.shop_reputation_star} ⭐({store.shop_reviewers.length})
+                                    </p>
                                 </div>
 
-                                <p style={{
-                                    margin: 0
-                                }}>{store.shop_description}</p>
+                                <p
+                                    style={{
+                                        margin: 0,
+                                    }}>
+                                    {store.shop_description}
+                                </p>
                                 <p>{store.shop_address}</p>
-                                <p><i className="fa-regular fa-clock"></i> Opens: {new Date(store.open_time).toLocaleTimeString('en-US', {
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    weekday: 'short'
-                                })}</p>
-                                <p><i className="fa-solid fa-phone"></i> {store.shop_phone}</p>
-                                <p><i className="fa-solid fa-bolt-lightning"></i> Soonest availability {new Date(store.soonest_booking_date).toLocaleTimeString('en-US', {
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    weekday: 'short'
-                                })}</p>
-                                <div style={{
-                                    padding: '12px 20px'
-                                    , backgroundColor: 'rgb(0, 150, 209)',
-                                    textAlign: 'center',
-                                    borderRadius: '4px'
-                                }}>Check Availability</div>
-
+                                <p>
+                                    <i className='fa-regular fa-clock'></i> Opens:{' '}
+                                    {new Date(store.open_time).toLocaleTimeString('en-US', {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                        weekday: 'short',
+                                    })}
+                                </p>
+                                <p>
+                                    <i className='fa-solid fa-phone'></i> {store.shop_phone}
+                                </p>
+                                <p>
+                                    <i className='fa-solid fa-bolt-lightning'></i> Soonest availability{' '}
+                                    {new Date(store.soonest_booking_date).toLocaleTimeString('en-US', {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                        weekday: 'short',
+                                    })}
+                                </p>
+                                <NavLink
+                                    to={`/date/${store._id}`}
+                                    style={{
+                                        color: '#ffffff',
+                                        padding: '12px 20px',
+                                        backgroundColor: 'rgb(0, 150, 209)',
+                                        textAlign: 'center',
+                                        borderRadius: '4px',
+                                    }}>
+                                    Check Availability
+                                </NavLink>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 export default Test;

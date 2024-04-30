@@ -16,8 +16,9 @@ import Users from './Pages/Users.jsx';
 import Settings from './Pages/Settings.jsx';
 import Reminder from './Pages/AddNew/Reminder.jsx';
 import Vehicles from './Pages/Vehicles.jsx';
-import FirstVehicleModal from './Pages/FirstVehicleModal.jsx'
-import PickDate from './Pages/PickDate.jsx'
+import FirstVehicleModal from './Pages/FirstVehicleModal.jsx';
+import PickDate from './Pages/PickDate.jsx';
+import Booking from './Pages/Booking.jsx';
 
 const App = () => {
     return (
@@ -29,7 +30,13 @@ const App = () => {
                     <Route path='/vehicles' element={<Vehicles />} />
                     <Route path='/test' element={<Test />} />
                     <Route path='/date' element={<PickDate />} />
-                    <Route path="/vehicle/edit/:id" element={<VehicleEdit />} />
+                    <Route path='/date/:id' element={<PickDate />} />
+
+                    <Route path='/booking' element={<Booking />}>
+                        <Route path=':id' element={<Booking />} />
+                    </Route>
+
+                    <Route path='/vehicle/edit/:id' element={<VehicleEdit />} />
                     <Route path='/vehicle/new' element={<VehicleEdit />} />
 
                     <Route path='/reminders' element={<Reminders />} />
@@ -47,8 +54,6 @@ const App = () => {
                 </Route>
 
                 <Route path='/first-vehicle' element={<FirstVehicleModal />} />
-
-
             </Routes>
         </BrowserRouter>
     );
