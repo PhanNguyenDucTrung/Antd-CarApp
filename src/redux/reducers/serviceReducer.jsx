@@ -59,6 +59,10 @@ const initialState = {
     year: '',
     model: '',
     comment: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
 };
 
 const serviceSlice = createSlice({
@@ -110,6 +114,18 @@ const serviceSlice = createSlice({
         setComment(state, action) {
             state.comment = action.payload;
         },
+        setFirstName(state, action) {
+            state.firstName = action.payload;
+        },
+        setLastName(state, action) {
+            state.lastName = action.payload;
+        },
+        setEmail(state, action) {
+            state.email = action.payload;
+        },
+        setPhone(state, action) {
+            state.phone = action.payload;
+        },
     },
 });
 
@@ -125,10 +141,13 @@ export const {
     setSelectedDate,
     setSelectedTime,
     setMake,
-
     setYear,
     setModel,
     setComment,
+    setFirstName,
+    setLastName,
+    setEmail,
+    setPhone,
 } = serviceSlice.actions; // Export new action
 
 export default serviceSlice.reducer;

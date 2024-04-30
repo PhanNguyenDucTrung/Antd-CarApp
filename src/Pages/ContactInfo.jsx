@@ -1,15 +1,22 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Button, Input, Checkbox } from 'antd';
+import { setEmail, setLastName, setFirstName, setPhone } from '../redux/reducers/serviceReducer';
 
 const ContactInfo = () => {
+    const dispatch = useDispatch();
     const selectedDate = useSelector(state => state.serviceReducer.selectedDate);
     const selectedTime = useSelector(state => state.serviceReducer.selectedTime);
     const make = useSelector(state => state.serviceReducer.make);
     const year = useSelector(state => state.serviceReducer.year);
     const model = useSelector(state => state.serviceReducer.model);
     const comment = useSelector(state => state.serviceReducer.comment);
+    const firstName = useSelector(state => state.serviceReducer.firstName);
+    const lastName = useSelector(state => state.serviceReducer.lastName);
+    const email = useSelector(state => state.serviceReducer.email);
+    const phone = useSelector(state => state.serviceReducer.phone);
+
     const store = useSelector(state => state.serviceReducer.selectedStore);
     return (
         <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
@@ -25,18 +32,45 @@ const ContactInfo = () => {
                         {/* First name */}
                         <div style={{ width: 'calc(50% - 10px)' }}>
                             <h5>First Name</h5>
-                            <Input placeholder='First name' style={{ width: '100%' }} />
+                            <Input
+                                placeholder='First name'
+                                style={{ width: '100%' }}
+                                value={firstName || ''}
+                                onChange={e => {
+                                    dispatch(setFirstName(e.target.value));
+                                }}
+                            />
                         </div>
 
                         <div style={{ width: 'calc(50% - 10px)' }}>
                             <h5>Last Name</h5>
-                            <Input placeholder='Last name' style={{ width: '100%' }} />
+                            <Input
+                                placeholder='Last name'
+                                style={{ width: '100%' }}
+                                onChange={e => {
+                                    dispatch(setLastName(e.target.value));
+                                }}
+                            />
                         </div>
                     </div>
                     <h5 style={{ marginTop: 10 }}>Email</h5>
-                    <Input placeholder='Email address' style={{ width: '100%' }} />
+                    <Input
+                        placeholder='Email address'
+                        style={{ width: '100%' }}
+                        value={email || ''}
+                        onChange={e => {
+                            dispatch(setEmail(e.target.value));
+                        }}
+                    />
                     <h5 style={{ marginTop: 10 }}>Phone</h5>
-                    <Input placeholder='Phone number' style={{ width: '100%' }} />
+                    <Input
+                        placeholder='Phone number'
+                        style={{ width: '100%' }}
+                        value={phone || ''}
+                        onChange={e => {
+                            dispatch(setPhone(e.target.value));
+                        }}
+                    />
                 </div>
                 {/* Accept License*/}
 
@@ -127,7 +161,7 @@ const ContactInfo = () => {
                 <hr />
                 <div>
                     <NavLink
-                        to={`/contact`}
+                        to={`/summary`}
                         style={{
                             display: 'block',
                             textAlign: 'center',
