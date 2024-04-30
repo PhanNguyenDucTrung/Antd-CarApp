@@ -55,6 +55,10 @@ const initialState = {
     addNewVehicle: false,
     editingObj: null,
     vehiclesData: [],
+    make: '',
+    year: '',
+    model: '',
+    comment: '',
 };
 
 const serviceSlice = createSlice({
@@ -94,6 +98,18 @@ const serviceSlice = createSlice({
         setSelectedTime(state, action) {
             state.selectedTime = action.payload;
         },
+        setMake(state, action) {
+            state.make = action.payload;
+        },
+        setYear(state, action) {
+            state.year = action.payload;
+        },
+        setModel(state, action) {
+            state.model = action.payload;
+        },
+        setComment(state, action) {
+            state.comment = action.payload;
+        },
     },
 });
 
@@ -108,6 +124,11 @@ export const {
     setCurrentStore,
     setSelectedDate,
     setSelectedTime,
+    setMake,
+
+    setYear,
+    setModel,
+    setComment,
 } = serviceSlice.actions; // Export new action
 
 export default serviceSlice.reducer;

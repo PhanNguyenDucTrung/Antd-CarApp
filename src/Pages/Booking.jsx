@@ -1,16 +1,22 @@
 import { Input, Select } from 'antd';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import cars from '../assets/cars.json';
+import { setComment, setYear, setMake, setModel } from '../redux/reducers/serviceReducer';
 console.log('cars', cars);
 const { Option } = Select;
 const { TextArea } = Input;
 const Booking = () => {
+    const dispatch = useDispatch();
     const store = useSelector(state => state.serviceReducer.selectedStore);
     const selectedTime = useSelector(state => state.serviceReducer.selectedTime);
     const selectedDate = useSelector(state => state.serviceReducer.selectedDate);
-    const [comment, setComment] = useState('');
+    const make = useSelector(state => state.serviceReducer.make);
+    const year = useSelector(state => state.serviceReducer.year);
+    const model = useSelector(state => state.serviceReducer.model);
+    const comment = useSelector(state => state.serviceReducer.comment);
+
     return (
         <div
             style={{
@@ -34,9 +40,15 @@ const Booking = () => {
                     ))}
                 </Select> */}{' '}
                 <div className='mt-3'>
-                    <h4>Year</h4>
+                    <h4>Make</h4>
                     <div className='custom-select'>
-                        <Select placeholder='Select a car' style={{ width: 200, color: '#ffffff' }}>
+                        <Select
+                            placeholder='Select a car'
+                            style={{ width: 200, color: '#ffffff' }}
+                            value={make}
+                            onChange={value => {
+                                dispatch(setMake(value));
+                            }}>
                             {cars.map(car => (
                                 <Option key={car.name} value={car.name}>
                                     {car && car.name ? car.name : ''}
@@ -48,7 +60,13 @@ const Booking = () => {
                 <div className='mt-3'>
                     <h4>Year</h4>
                     <div className='custom-select'>
-                        <Select placeholder='Select a year' style={{ width: 200, color: '#ffffff' }}>
+                        <Select
+                            placeholder='Select a year'
+                            style={{ width: 200, color: '#ffffff' }}
+                            value={year}
+                            onChange={value => {
+                                dispatch(setYear(value));
+                            }}>
                             {Array.from({ length: 31 }, (_, i) => 2022 - i).map(year => (
                                 <Option key={year} value={year}>
                                     {year}
@@ -60,7 +78,14 @@ const Booking = () => {
                 <div className='mt-3'>
                     <h4>Model</h4>
                     <div className='custom-input'>
-                        <Input placeholder='Model' style={{ width: 200, color: '#ffffff' }} />
+                        <Input
+                            placeholder='Model'
+                            style={{ width: 200, color: '#ffffff' }}
+                            value={model}
+                            onChange={e => {
+                                dispatch(setModel(e.target.value));
+                            }}
+                        />
                     </div>
                 </div>
                 <p style={{ fontWeight: 500, fontSize: '25px', marginTop: '25px' }}>
@@ -69,7 +94,7 @@ const Booking = () => {
                 <p>Let the shop know what's wrong, so they can provide accurate care</p>
                 <TextArea
                     value={comment}
-                    onChange={e => setComment(e.target.value)}
+                    onChange={e => dispatch(setComment(e.target.value))}
                     maxLength={200}
                     placeholder='Enter your comment here'
                 />
@@ -117,6 +142,7 @@ const Booking = () => {
                 <div style={{ color: '#000001' }}>
                     <h4>Drop off time</h4>
                     <p>
+                        <i className='fa-regular fa-clock'></i>{' '}
                         {new Date(selectedDate).toLocaleString('en-US', { month: 'long' })}{' '}
                         {new Date(selectedDate).getDate()}, {new Date(selectedDate).getFullYear()} at {selectedTime}
                     </p>
@@ -125,7 +151,7 @@ const Booking = () => {
                 <hr />
                 <div>
                     <NavLink
-                        to={`/booking`}
+                        to={`/contact`}
                         style={{
                             display: 'block',
                             textAlign: 'center',

@@ -19,6 +19,7 @@ import Vehicles from './Pages/Vehicles.jsx';
 import FirstVehicleModal from './Pages/FirstVehicleModal.jsx';
 import PickDate from './Pages/PickDate.jsx';
 import Booking from './Pages/Booking.jsx';
+import ContactInfo from './Pages/ContactInfo.jsx';
 
 const App = () => {
     return (
@@ -35,6 +36,7 @@ const App = () => {
                     <Route path='/booking' element={<Booking />}>
                         <Route path=':id' element={<Booking />} />
                     </Route>
+                    <Route path='/contact' element={<ContactInfo />} />
 
                     <Route path='/vehicle/edit/:id' element={<VehicleEdit />} />
                     <Route path='/vehicle/new' element={<VehicleEdit />} />
