@@ -1,22 +1,28 @@
 import { Input, Select } from 'antd';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import cars from '../assets/cars.json';
+console.log('cars', cars);
 const { Option } = Select;
+const { TextArea } = Input;
 const Booking = () => {
     const store = useSelector(state => state.serviceReducer.selectedStore);
     const selectedTime = useSelector(state => state.serviceReducer.selectedTime);
     const selectedDate = useSelector(state => state.serviceReducer.selectedDate);
+    const [comment, setComment] = useState('');
     return (
         <div
             style={{
                 display: 'flex',
-                gap: '20px',
+                gap: '30px',
+                justifyContent: 'center',
                 padding: '20px',
                 borderRadius: '5px',
             }}>
             <div
                 style={{
-                    width: '600px',
+                    width: '500px',
                 }}>
                 <h3>Tell us about your vehicle</h3>
                 {/* select year */}{' '}
@@ -27,7 +33,18 @@ const Booking = () => {
                         </Option>
                     ))}
                 </Select> */}{' '}
-                <h4>Make</h4>
+                <div className='mt-3'>
+                    <h4>Year</h4>
+                    <div className='custom-select'>
+                        <Select placeholder='Select a car' style={{ width: 200, color: '#ffffff' }}>
+                            {cars.map(car => (
+                                <Option key={car.name} value={car.name}>
+                                    {car && car.name ? car.name : ''}
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
+                </div>
                 <div className='mt-3'>
                     <h4>Year</h4>
                     <div className='custom-select'>
@@ -42,10 +59,21 @@ const Booking = () => {
                 </div>
                 <div className='mt-3'>
                     <h4>Model</h4>
+                    <div className='custom-input'>
+                        <Input placeholder='Model' style={{ width: 200, color: '#ffffff' }} />
+                    </div>
                 </div>
-                <p style={{ fontWeight: 500 }}>Desribe the issues you're having with your vehicle</p>
+                <p style={{ fontWeight: 500, fontSize: '25px', marginTop: '25px' }}>
+                    Desribe the issues you're having with your vehicle
+                </p>
                 <p>Let the shop know what's wrong, so they can provide accurate care</p>
-                <Input placeholder='Enter your comment here' />
+                <TextArea
+                    value={comment}
+                    onChange={e => setComment(e.target.value)}
+                    maxLength={200}
+                    placeholder='Enter your comment here'
+                />
+                <div style={{ marginTop: '10px' }}>{comment.length}/200</div>
             </div>{' '}
             <div style={{ backgroundColor: '#f0f0f0', padding: '20px', alignSelf: 'self-start', borderRadius: '5px' }}>
                 <h5 style={{ margin: '0px', color: '#606fa6' }}>DROP OFF ATT</h5>

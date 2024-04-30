@@ -110,6 +110,29 @@ a {
     color: #ffffff !important;
 }
 
+.custom-select .ant-select-arrow {
+    color: #ffffff !important;
+}
+
+/* Custom Input */
+.custom-input .ant-input {
+    border: none !important;
+    border-bottom: 1px solid #ffffff !important;
+    border-radius: 0 !important;
+    background-color: transparent !important;
+    color: #ffffff !important;
+}
+
+.custom-input .ant-input::placeholder {
+    color: #ffffff !important;
+}
+
+.custom-input .ant-input:focus,
+.custom-input .ant-input:active {
+    /* border-color: #000 !important; */
+    box-shadow: none !important;
+}
+
 /* Form */
 .form-group {
     display: flex;
