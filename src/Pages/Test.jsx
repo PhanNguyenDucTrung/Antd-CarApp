@@ -195,7 +195,7 @@ const Test = () => {
             // Add the event handler back
             mapRef.current.on('moveend', handleMoveEnd);
         });
-    }, [mapRef, markers, stores]);
+    }, [mapRef, markers]);
 
     return (
         <div style={{ display: 'flex', height: '680px', margin: 'auto', width: '1400px' }}>
