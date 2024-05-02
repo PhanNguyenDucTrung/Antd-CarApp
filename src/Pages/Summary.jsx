@@ -5,6 +5,7 @@ const Summary = () => {
     const selectedTime = useSelector(state => state.serviceReducer.selectedTime);
     const selectedDate = useSelector(state => state.serviceReducer.selectedDate);
     const store = useSelector(state => state.serviceReducer.selectedStore);
+    console.log(store)
     const make = useSelector(state => state.serviceReducer.make);
     const year = useSelector(state => state.serviceReducer.year);
     const model = useSelector(state => state.serviceReducer.model);
@@ -23,7 +24,7 @@ const Summary = () => {
                     borderRadius: '5px',
                 }}>
                 <h5 style={{ margin: '0px', color: '#606fa6', display: 'flex', justifyContent: 'space-between' }}>
-                    DROP OFF ATT <NavLink to='/date'>Edit</NavLink>
+                    DROP OFF ATT <NavLink to={`/date/${store._id}`}>Edit</NavLink>
                 </h5>
                 <div
                     style={{
@@ -120,7 +121,20 @@ const Summary = () => {
                 <p> {phone}</p>
                 <p>{email}</p>
             </div>
+
+            <div style={{
+                marginTop: '20px',
+                backgroundColor: '#f0f0f0',
+                padding: '20px',
+                color: '#000001',
+                borderRadius: '5px',
+                textAlign: 'center'
+            }}>
+                Checkout
+            </div>
         </div>
     );
 };
+
+
 export default Summary;
