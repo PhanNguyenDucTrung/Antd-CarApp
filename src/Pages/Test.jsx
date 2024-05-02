@@ -27,9 +27,19 @@ const Test = () => {
         }
     };
 
-
-
     useEffect(() => {
+        axios
+            .get('http://localhost:3000/serviceCenter/shop/api')
+            .then(response => {
+                console.log('Data:', response.data);
+                dispatch(setStores(response.data));
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        if (!stores.length) {
+            return;
+        }
         if (!mapRef.current) {
             mapRef.current = L.map('map').setView([10.771663, 106.669631], 13);
 
@@ -82,8 +92,9 @@ const Test = () => {
                         }}>
                             <div style="display: flex; justify-content: space-between; align-items: center">
                                 <h2 style="margin-top: 0">${item.shop_name}</h2>
-                                <p style="margin-top: 0">${item.shop_reputation_star} ⭐(${item.shop_reviewers.length
-                    })</p>
+                                <p style="margin-top: 0">${item.shop_reputation_star} ⭐(${
+                    item.shop_reviewers.length
+                })</p>
                             </div>
             
                             <p style="
@@ -95,23 +106,23 @@ const Test = () => {
                             margin-top: 5px;
                         ">${item.shop_address}</p>
                             <p><i class="fa-regular fa-clock"></i> Opens: ${new Date(item.open_time).toLocaleTimeString(
-                        'en-US',
-                        {
-                            hour: 'numeric',
-                            minute: 'numeric',
-                            hour12: true,
-                            weekday: 'short',
-                        }
-                    )}</p>
+                                'en-US',
+                                {
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true,
+                                    weekday: 'short',
+                                }
+                            )}</p>
                             <p style="margin-top: 5px"><i class="fa-solid fa-phone"></i> ${item.shop_phone}</p>
                             <p style="margin-top: 5px"><i class="fa-solid fa-bolt-lightning"></i> Soonest availability ${new Date(
-                        item.soonest_booking_date
-                    ).toLocaleTimeString('en-US', {
-                        hour: 'numeric',
-                        minute: 'numeric',
-                        hour12: true,
-                        weekday: 'short',
-                    })}</p>
+                                item.soonest_booking_date
+                            ).toLocaleTimeString('en-US', {
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                hour12: true,
+                                weekday: 'short',
+                            })}</p>
                             
                     <div style="
                                 margin-top: 5px;
@@ -184,17 +195,7 @@ const Test = () => {
             // Add the event handler back
             mapRef.current.on('moveend', handleMoveEnd);
         });
-
-        axios.get('http://localhost:3000/serviceCenter/shop/api')
-            .then(response => {
-                console.log('Data:', response.data);
-                dispatch(setStores(response.data))
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-
-    }, [mapRef, markers]);
+    }, [mapRef, markers, stores]);
 
     return (
         <div style={{ display: 'flex', height: '680px', margin: 'auto', width: '1400px' }}>
