@@ -238,3 +238,68 @@ a {
     /* Change the background color as desired */
     cursor: pointer;
 }
+
+/* Detail Page  **** */
+.shop-overview h2 {
+    font-size: 20px;
+}
+.shop-photos {
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    gap: 8px;
+}
+.shop-photos img {
+    display: block;
+    width: 50%;
+    height: 280px;
+    object-fit: cover;
+}
+.shop-overview {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.shop-overview .left {
+    padding-right: 20px;
+}
+
+.shop-overview .left > div {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.shop-overview .feature-title {
+    font-size: 16px;
+    color: #f1f1f1;
+}
+
+.shop-overview .feature-title {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.shop-overview .right {
+    padding: 10px;
+    max-width: 360px;
+    color: #7b8786;
+    text-align: center;
+}
+
+/* comment section */
+.comment {
+    display: flex;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.comment .user-info {
+    width: 30%;
+}
+
+.comment .comment-detail {
+    width: 70%;
+}

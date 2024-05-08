@@ -21,6 +21,7 @@ import PickDate from './Pages/PickDate.jsx';
 import Booking from './Pages/Booking.jsx';
 import ContactInfo from './Pages/ContactInfo.jsx';
 import Summary from './Pages/Summary.jsx';
+import Detail from './Pages/Detail.jsx';
 
 const App = () => {
     return (
@@ -39,6 +40,7 @@ const App = () => {
                     </Route>
                     <Route path='/contact' element={<ContactInfo />} />
                     <Route path='/summary' element={<Summary />} />
+                    <Route path='/detail' element={<Detail />}></Route>
 
                     <Route path='/vehicle/edit/:id' element={<VehicleEdit />} />
                     <Route path='/vehicle/new' element={<VehicleEdit />} />
