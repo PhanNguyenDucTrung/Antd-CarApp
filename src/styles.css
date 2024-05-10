@@ -303,3 +303,8 @@ a {
 .comment .comment-detail {
     width: 70%;
 }
+
+/* custom rate */
+.custom-rate .ant-rate-star-zero .ant-rate-star-second {
+    color: #ccc; /* Change this to the color you want */
+}

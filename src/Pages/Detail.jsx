@@ -1,6 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { Input, Button, Rate } from 'antd';
 
+const { TextArea } = Input;
 const Detail = () => {
+    let { id } = useParams();
+    const stores = useSelector(state => state.serviceReducer.stores);
+    console.log(stores); id = id.toString();
+    const currentStore = stores.find(store => store._id === id);
+    console.log(currentStore);
+    const { shop_website, shop_phone, shop_description, shop_short_description, shop_name, shop_reputation_star, shop_reviewers, shop_address } = currentStore;
+
+    const generateStars = (rating) => {
+        const stars = '⭐'.repeat(rating);
+        return stars;
+    };
     return (
         <div
             style={{
@@ -9,8 +23,8 @@ const Detail = () => {
             }}>
             {/* shop photos */}
             <div className='shop-photos'>
-                <img src='https://via.placeholder.com/150' alt='shop' />
-                <img src='https://via.placeholder.com/150' alt='shop' />
+                <img src={currentStore.shop_images[0]} alt='shop' />
+                <img src={currentStore.shop_images[1]} alt='shop' />
             </div>
 
             {/* shop info */}
@@ -19,16 +33,15 @@ const Detail = () => {
                     {/* main overview */}
                     <div>
                         <div>
-                            <span>⭐ 4.3</span> <span> 21 reviews</span>
+                            <span>{shop_reputation_star} ⭐ </span> <span> {shop_reviewers.length} reviews</span>
                         </div>
-                        <h2>Shop Name</h2>
+                        <h2>{shop_name}</h2>
                         <p
                             style={{
                                 fontWeight: 400,
                                 fontSize: '18px',
                             }}>
-                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. At possimus nobis eos culpa.
-                            Nulla, consequatur.
+                            {shop_short_description}
                         </p>
                         <p>2703 10th St</p>
                         <p>Berkeley, CA 94710</p>
@@ -45,7 +58,7 @@ const Detail = () => {
                                 }}></span>
                             <span>Streetview</span>
                         </div>
-                        <p>0031231231312</p>
+                        <p>{shop_phone}</p>
                         <p
                             style={{
                                 fontWeight: 500,
@@ -78,9 +91,7 @@ const Detail = () => {
                             style={{
                                 fontSize: '14px',
                             }}>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis eius pariatur exercitationem,
-                            molestiae quia odit cum nesciunt aperiam iure aliquid ipsum ducimus laudantium non provident
-                            adipisci fuga officiis. Repellat, eaque!
+                            {shop_description}
                         </p>
                     </div>
 
@@ -97,21 +108,11 @@ const Detail = () => {
                             possimus voluptate perferendis excepturi?
                         </p>
                         <div>
-                            <button
-                                style={{
-                                    backgroundColor: '#0096d1',
-                                    color: 'white',
-                                    padding: '10px 20px',
-                                    borderRadius: '5px',
-                                    fontWeight: 500,
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                }}>
-                                Send Message
-                            </button>
 
-                            <button
+
+                            <a href={`${shop_website}`}
                                 style={{
+                                    display: 'inline-block',
                                     backgroundColor: 'white',
                                     color: '#0096d1',
                                     padding: '10px 20px',
@@ -119,10 +120,10 @@ const Detail = () => {
                                     fontWeight: 500,
                                     border: 'none',
                                     cursor: 'pointer',
-                                    marginLeft: '20px',
+
                                 }}>
                                 Visit Website
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -208,31 +209,33 @@ const Detail = () => {
                     }}>
                     Overall Rating
                 </h3>
-                <p>⭐ 4.3 (21 reviews)</p>
+
+
+                <p>⭐ {shop_reputation_star} ({shop_reviewers.length} reviews)</p>
                 <div className='comments'>
-                    <div className='comment'>
-                        <div className='user-info'>
-                            <p
-                                style={{
-                                    fontWeight: 500,
-                                }}>
-                                Username
-                            </p>
-                            <p>Car name</p>
+                    {shop_reviewers.map((review, index) => (
+                        <div className='comment' key={index}>
+                            <div className='user-info'>
+                                <p style={{ fontWeight: 500 }}>{review.reviewer_name}</p>
+                                <p>{review.car_name}</p> {/* Assuming car_name is available */}
+                            </div>
+                            <div className='comment-detail'>
+                                <p style={{ fontWeight: 500 }}>
+                                    <span>Rating: {generateStars(review.review_star)}</span>
+                                    <span>{new Date(review.reviewer_date).toLocaleDateString()}</span>
+                                </p>
+                                <p className='comment-content'>{review.reviewer_comment}</p>
+                            </div>
                         </div>
-                        <div className='comment-detail'>
-                            <p
-                                style={{
-                                    fontWeight: 500,
-                                }}>
-                                <span> Rating: ⭐⭐⭐⭐</span>
-                                <span> Jul 26, 2019</span>
-                            </p>
-                            <p className='comment-content'>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, tempore?
-                            </p>
-                        </div>
-                    </div>
+                    ))}
+                </div>
+                <div style={{
+                    paddingBottom: '20px'
+                }}>
+                    <h4>Leave a Comment: <Rate className='custom-rate'></Rate></h4>
+                    
+                    <TextArea rows={4} />
+                    <Button type="primary" style={{ width: '18%', marginLeft: 'auto', marginTop: '10px', fontWeight: '500' }}>Post Comment</Button>
                 </div>
             </div>
         </div>

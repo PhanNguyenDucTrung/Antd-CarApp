@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import L from 'leaflet';
 import { useState } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setStores } from '../redux/reducers/serviceReducer';
 const Test = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const mapRef = useRef(null);
     const [markers, setMarkers] = useState([]);
@@ -28,19 +29,20 @@ const Test = () => {
     };
 
     useEffect(() => {
-        axios
-            .get('http://localhost:3000/serviceCenter/shop/api')
-            .then(response => {
-                console.log('Data:', response.data);
-                dispatch(setStores(response.data));
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-        if (!stores.length) {
+
+        if (stores.length === 0) {
+            axios
+                .get('http://localhost:3000/serviceCenter/shop/api')
+                .then(response => {
+                    console.log('Data:', response.data);
+                    dispatch(setStores(response.data));
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
             return;
         }
-        if (!mapRef.current) {
+        if (!mapRef.current && stores.length > 0) {
             mapRef.current = L.map('map').setView([10.771663, 106.669631], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -72,11 +74,11 @@ const Test = () => {
                     >
                         <div
                             style="
+                            background-color:'red';
                                 width: 300px;
                                 overflow: 'hidden';
                                 border-radius: 5px;
-                          "
-                        >
+                          ">
                             <img
                                 src=${item.shop_images[0]}
                                 alt=${item.shop_name}
@@ -88,78 +90,67 @@ const Test = () => {
                         </div>
                         <div style={{
                             height: '100%',
-                            alignItems: 'flex-start', // Add this line
-                        }}>
+                            alignItems: 'flex-start', }}>
                             <div style="display: flex; justify-content: space-between; align-items: center">
                                 <h2 style="margin-top: 0">${item.shop_name}</h2>
-                                <p style="margin-top: 0">${item.shop_reputation_star} ⭐(${
-                    item.shop_reviewers.length
-                })</p>
+                                <p style="margin-top: 0">${item.shop_reputation_star} ⭐(${item.shop_reviewers.length})</p>
                             </div>
             
                             <p style="
                                 margin:0;
-                                margin-top: 5px;
-                            ">${item.shop_description}</p>
+                                margin-top: 5px;">${item.shop_description}
+                            </p>
                             <p style="
                             margin:0;
-                            margin-top: 5px;
-                        ">${item.shop_address}</p>
+                            margin-top: 5px;">${item.shop_address}
+                            </p>
                             <p><i class="fa-regular fa-clock"></i> Opens: ${new Date(item.open_time).toLocaleTimeString(
-                                'en-US',
-                                {
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    weekday: 'short',
-                                }
-                            )}</p>
+                    'en-US',
+                    {
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true,
+                        weekday: 'short',
+                    }
+                )}</p>
                             <p style="margin-top: 5px"><i class="fa-solid fa-phone"></i> ${item.shop_phone}</p>
                             <p style="margin-top: 5px"><i class="fa-solid fa-bolt-lightning"></i> Soonest availability ${new Date(
-                                item.soonest_booking_date
-                            ).toLocaleTimeString('en-US', {
-                                hour: 'numeric',
-                                minute: 'numeric',
-                                hour12: true,
-                                weekday: 'short',
-                            })}</p>
+                    item.soonest_booking_date
+                ).toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true,
+                    weekday: 'short',
+                })}</p>
                             
-                    <div style="
+                    <a id="check-availability-${item._id}" style="
+                                display: block;
                                 margin-top: 5px;
                                 color: #ffffff;
                                 padding: 12px 20px;
                                 background-color: rgb(0, 150, 209);
                                 text-align: center;
                                 border-radius: 4px;
-                            ">Check Availability</div>
+                            ">Check Availability</a>
                         </div>
                     </div>
                 `;
 
-                return L.marker([latitude, longitude], { icon })
+                const marker = L.marker([latitude, longitude], { icon })
                     .addTo(mapRef.current)
-                    .bindPopup(popupContent)
-                    .openPopup();
+                    .bindPopup(popupContent);
+
+                marker.on('popupopen', () => {
+                    const checkAvailabilityButton = document.getElementById(`check-availability-${item._id}`);
+                    checkAvailabilityButton.onclick = () => {
+                        navigate(`/date/${item._id}`);
+                    };
+                });
+
+                return marker;
             });
 
-            // stores.forEach(item => {
-            //     const latitude = parseFloat(item.shop_coordinate[0]);
-            //     const longitude = parseFloat(item.shop_coordinate[1]);
 
-            //     const icon = L.divIcon({
-            //         className: 'custom-icon',
-            //         html: `<div>${(item.shop_reputation_star)} ⭐</div>`,
-            //         iconSize: [30, 26],
-            //         iconAnchor: [12, 41],
-            //         popupAnchor: [1, -34],
-            //     });
-
-            //     const marker = L.marker([latitude, longitude], { icon })
-            //         .addTo(mapRef.current)
-            //         .bindPopup(`<b>${item.shop_name}</b><br>${item.shop_description}`);
-
-            //     setMarkers(prevMarkers => [...prevMarkers, marker]);
-            // });
 
             const group = new L.featureGroup(markers);
             mapRef.current.fitBounds(group.getBounds());
@@ -195,8 +186,8 @@ const Test = () => {
             // Add the event handler back
             mapRef.current.on('moveend', handleMoveEnd);
         });
-    }, [mapRef, markers]);
-
+    }, [mapRef, markers, stores]);
+    // http://localhost:3000/serviceCenter/shop/api
     return (
         <div style={{ display: 'flex', height: '680px', margin: 'auto', width: '1400px' }}>
             <div id='map' style={{ flex: '1', minWidth: '880px' }}></div>
@@ -235,15 +226,16 @@ const Test = () => {
                                     overflow: 'hidden',
                                     borderRadius: '5px',
                                 }}>
-                                <img
-                                    src={store.shop_images[0]}
-                                    alt={store.shop_name}
-                                    style={{
-                                        width: '360px',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                    }}
-                                />
+                                <NavLink to={`/detail/${store._id}`}>
+                                    <img
+                                        src={store.shop_images[0]}
+                                        alt={store.shop_name}
+                                        style={{
+                                            width: '360px',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                        }}
+                                    /></NavLink>
                             </div>
                             <div
                                 style={{
