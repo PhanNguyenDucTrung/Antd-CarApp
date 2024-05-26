@@ -71,8 +71,7 @@ const Refueling = () => {
     ];
 
     const data = [
-        // Add your data here. Each object in the array represents a row in the table.
-        // For example:
+
         {
             key: '1',
             index: 1,

@@ -76,7 +76,7 @@ a {
     overflow: hidden;
 }
 
-.radio-custom .ant-radio + * {
+.radio-custom .ant-radio+* {
     display: block;
     padding: 0;
     overflow: hidden;
@@ -243,18 +243,21 @@ a {
 .shop-overview h2 {
     font-size: 20px;
 }
+
 .shop-photos {
     border-radius: 8px;
     overflow: hidden;
     display: flex;
     gap: 8px;
 }
+
 .shop-photos img {
     display: block;
     width: 50%;
     height: 280px;
     object-fit: cover;
 }
+
 .shop-overview {
     display: flex;
     gap: 12px;
@@ -265,7 +268,7 @@ a {
     padding-right: 20px;
 }
 
-.shop-overview .left > div {
+.shop-overview .left>div {
     padding-top: 20px;
     padding-bottom: 10px;
     border-bottom: 1px solid #e0e0e0;
@@ -306,5 +309,145 @@ a {
 
 /* custom rate */
 .custom-rate .ant-rate-star-zero .ant-rate-star-second {
-    color: #ccc; /* Change this to the color you want */
+    color: #ccc;
+    /* Change this to the color you want */
+}
+
+/* button edit */
+.edit-button {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.my-account-section {
+    width: 560px;
+}
+
+.my-account-section h1 {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.my-account-section .info {
+    padding-block: 20px;
+}
+
+.my-account-section .title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.my-account-section .sub-title {
+    margin-top: 10px;
+    font-weight: 500;
+    font-size: 16px;
+
+}
+
+.my-account-section .has-borderbottom {
+    border-bottom: 1px solid #ced2d6;
+}
+
+.my-account-section .content {
+    color: #22a6f2;
+    text-decoration: underline;
+}
+
+.my-account-section button {
+    border: none;
+    background-color: transparent;
+}
+
+.avatar-badges {
+    color: #000000;
+}
+
+/* https: //guide-images.cdn.ifixit.com/igi/sfJOkToMs44AtSyG.standard */
+.avatar {
+    display: flex;
+}
+
+.avatar .content {
+    padding: 20px;
+}
+
+.avatar-badges .avatar img {
+    width: 200px;
+}
+
+span.badge {
+    color: #000000 !important;
+}
+
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 7px;
+}
+
+.badges img {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 50%;
+
+
+}
+
+.guides {
+    margin-top: 20px;
+}
+
+.guide-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.guide-item {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.guide-item img {
+    width: 100px;
+    object-fit: cover;
+}
+
+.guide-item span {
+    margin-left: 10px;
+}
+
+/* Appointment.css */
+.appointment-container {
+    padding: 20px;
+}
+
+.appointment-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.appointment-avatar {
+    margin-right: 20px;
+}
+
+.appointment-content {
+    flex: 1;
+}
+
+.appointment-title {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.appointment-date {
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.appointment-description {
+    margin: 0;
 }

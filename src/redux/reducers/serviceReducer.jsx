@@ -1,8 +1,10 @@
+// src/redux/slices/serviceSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-const initialState = {
-    stores: [
 
-    ],
+const initialState = {
+    appointments: [],
+    stores: [],
+    profile: {},
     selectedDate: new Date().toISOString(),
     selectedTime: '10:00',
     selectedStore: null,
@@ -37,7 +39,6 @@ const serviceSlice = createSlice({
             state.serviceData = action.payload;
         },
         setSelectedRows(state, action) {
-            // New reducer for selected row
             state.selectedRows = action.payload;
         },
         setSelectedRowKeys(state, action) {
@@ -87,6 +88,57 @@ const serviceSlice = createSlice({
         setPhone(state, action) {
             state.phone = action.payload;
         },
+        setProfile(state, action) {
+            state.profile = action.payload;
+        },
+        setFuelData(state, action) {
+            state.serviceData.FUEL_DATA = action.payload;
+        },
+        addFuelData(state, action) {
+            state.serviceData.FUEL_DATA.push(action.payload);
+        },
+        updateFuelData(state, action) {
+            const index = state.serviceData.FUEL_DATA.findIndex(fuel => fuel.FUEL_ID === action.payload.FUEL_ID);
+            if (index !== -1) {
+                state.serviceData.FUEL_DATA[index] = action.payload;
+            }
+        },
+        deleteFuelData(state, action) {
+            state.serviceData.FUEL_DATA = state.serviceData.FUEL_DATA.filter(fuel => fuel.FUEL_ID !== action.payload);
+        },
+        setServiceData(state, action) {
+            state.serviceData.SERVICE_DATA = action.payload;
+        },
+        addServiceData(state, action) {
+            state.serviceData.SERVICE_DATA.push(action.payload);
+        },
+        updateServiceData(state, action) {
+            const index = state.serviceData.SERVICE_DATA.findIndex(service => service.SERVICE_ID === action.payload.SERVICE_ID);
+            if (index !== -1) {
+                state.serviceData.SERVICE_DATA[index] = action.payload;
+            }
+        },
+        deleteServiceData(state, action) {
+            state.serviceData.SERVICE_DATA = state.serviceData.SERVICE_DATA.filter(service => service.SERVICE_ID !== action.payload);
+        },
+        setPlaceData(state, action) {
+            state.serviceData.PLACE_DATA = action.payload;
+        },
+        addPlaceData(state, action) {
+            state.serviceData.PLACE_DATA.push(action.payload);
+        },
+        updatePlaceData(state, action) {
+            const index = state.serviceData.PLACE_DATA.findIndex(place => place.PLACE_ID === action.payload.PLACE_ID);
+            if (index !== -1) {
+                state.serviceData.PLACE_DATA[index] = action.payload;
+            }
+        },
+        deletePlaceData(state, action) {
+            state.serviceData.PLACE_DATA = state.serviceData.PLACE_DATA.filter(place => place.PLACE_ID !== action.payload);
+        },
+        setAppointments(state, action) {
+            state.appointments = action.payload;
+        },
     },
 });
 
@@ -110,6 +162,20 @@ export const {
     setLastName,
     setEmail,
     setPhone,
-} = serviceSlice.actions; // Export new action
+    setProfile,
+    setFuelData,
+    addFuelData,
+    updateFuelData,
+    deleteFuelData,
+    setServiceData,
+    addServiceData,
+    updateServiceData,
+    deleteServiceData,
+    setPlaceData,
+    addPlaceData,
+    updatePlaceData,
+    deletePlaceData,
+    setAppointments,
+} = serviceSlice.actions;
 
 export default serviceSlice.reducer;

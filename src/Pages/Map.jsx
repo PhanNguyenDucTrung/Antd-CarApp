@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setStores } from '../redux/reducers/serviceReducer';
-const Test = () => {
+const Map = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const mapRef = useRef(null);
@@ -56,7 +56,7 @@ const Test = () => {
                 const icon = L.divIcon({
                     className: 'custom-icon',
                     html: `<div>${item.shop_reputation_star} ⭐</div>`,
-                    iconSize: [60, 36],
+                    iconSize: [70, 36],
                     popupAnchor: [1, -34],
                 });
 
@@ -296,4 +296,4 @@ const Test = () => {
         </div>
     );
 };
-export default Test;
+export default Map;

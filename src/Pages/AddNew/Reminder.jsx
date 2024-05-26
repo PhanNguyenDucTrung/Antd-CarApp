@@ -16,6 +16,8 @@ import { useLocation } from 'react-router-dom';
 import { setEditing } from '../../redux/reducers/serviceReducer';
 const Reminder = () => {
     const vehicleId = useSelector(state => state.serviceReducer.selectedRows[0].vehicle_id);
+    const userId = useSelector(state => state.serviceReducer.userId)
+    console.log('userId', userId)
     const editingObj = useSelector(state => state.serviceReducer.editingObj);
     const dispatch = useDispatch();
 
@@ -23,9 +25,10 @@ const Reminder = () => {
 
         const data = {
             comments, serviceType, odometer, time, contactMethod, date
+            , userId
         }
 
-        console.log(values);
+
         if (editingObj) {
             try {
                 const response = await axios.patch(`http://localhost:3000/carTracking/reminder/api/${vehicleId}`, data);
@@ -59,6 +62,8 @@ const Reminder = () => {
     const [time, setTime] = useState(moment('12:00', 'HH:mm'));
     const [contactMethod, setContactMethod] = useState('');
     const [date, setDate] = useState(null);
+
+
     useEffect(() => {
         if (editingObj) {
             setServiceType(editingObj.SERVICE_TYPE)

@@ -1,16 +1,52 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Input, Button, Rate } from 'antd';
+import { useState } from 'react';
+import axios from 'axios';
+import { setStores } from '../redux/reducers/serviceReducer';
 
 const { TextArea } = Input;
 const Detail = () => {
+    const dispatch = useDispatch();
     let { id } = useParams();
     const stores = useSelector(state => state.serviceReducer.stores);
+    const userId = useSelector(state => state.serviceReducer.userId);
     console.log(stores); id = id.toString();
     const currentStore = stores.find(store => store._id === id);
     console.log(currentStore);
     const { shop_website, shop_phone, shop_description, shop_short_description, shop_name, shop_reputation_star, shop_reviewers, shop_address } = currentStore;
+    const [comment, setComment] = useState('');
+    const [rating, setRating] = useState(0);
+    const handlePostComment = () => {
 
+        console.log(comment, rating);
+        const data = {
+            userId,
+            storeId: currentStore._id,
+            comment: comment,
+            rating: rating,
+        };
+
+        axios
+            .post('http://localhost:3000/serviceCenter/shop/reviewers/api', data)
+            .then(response => {
+                console.log('Response:', response);
+                axios
+                    .get('http://localhost:3000/serviceCenter/shop/api')
+                    .then(response => {
+                        console.log('Data:', response.data);
+                        dispatch(setStores(response.data));
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+
+            });
+    };
     const generateStars = (rating) => {
         const stars = '⭐'.repeat(rating);
         return stars;
@@ -232,10 +268,10 @@ const Detail = () => {
                 <div style={{
                     paddingBottom: '20px'
                 }}>
-                    <h4>Leave a Comment: <Rate className='custom-rate'></Rate></h4>
-                    
-                    <TextArea rows={4} />
-                    <Button type="primary" style={{ width: '18%', marginLeft: 'auto', marginTop: '10px', fontWeight: '500' }}>Post Comment</Button>
+                    <h4>Leave a Comment: <Rate className='custom-rate' onChange={setRating}></Rate></h4>
+
+                    <TextArea rows={4} value={comment} onChange={e => setComment(e.target.value)} />
+                    <Button onClick={handlePostComment} type="primary" style={{ width: '18%', marginLeft: 'auto', marginTop: '10px', fontWeight: '500' }}>Post Comment</Button>
                 </div>
             </div>
         </div>

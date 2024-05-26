@@ -130,7 +130,7 @@ const History = () => {
                         }}
                         icon={<span style={{
                             fontWeight: 600,
-                        }}>Lastest</span>}
+                        }}>Oldest</span>}
                     />
                     {data.map((item, index) => (
                         <VerticalTimelineElement
@@ -188,7 +188,7 @@ const History = () => {
                         }}
                         icon={<span style={{
                             fontWeight: 600,
-                        }}>Oldest</span>}
+                        }}>Lastest</span>}
                     />
                 </VerticalTimeline>
 
@@ -210,7 +210,7 @@ const History = () => {
                         }}
                         icon={<span style={{
                             fontWeight: 600,
-                        }}>Latest</span>}
+                        }}>Oldest</span>}
                     />
                     {reminderHistory?.map((item, index) => (
                         <VerticalTimelineElement
@@ -260,7 +260,7 @@ const History = () => {
                         }}
                         icon={<span style={{
                             fontWeight: 600,
-                        }}>Oldest</span>}
+                        }}>Lastest</span>}
                     />
                 </VerticalTimeline >
             </div >
